@@ -20,8 +20,9 @@ class CustominputState extends State<Custominput> {
       decoration: const BoxDecoration(
         border: Border(
           bottom: BorderSide(
-            color: Colors.black, // Border color
-            width: 1.0, // Border width
+            color: Color.fromARGB(235, 104, 57, 49), // Border color
+
+            width: 1.5, // Border width
           ),
         ),
       ),
@@ -30,7 +31,9 @@ class CustominputState extends State<Custominput> {
         decoration: InputDecoration(
           labelText: widget.label,
           labelStyle: TextStyle(
-            color: secundaryColor, // Set the color of the label text
+            color: textColor,
+            fontFamily: "LexendDeca",
+            fontWeight: FontWeight.normal, // Set the color of the label text
           ),
           border: InputBorder.none, // Removes the default border
           contentPadding: EdgeInsets.zero, // Removes extra padding

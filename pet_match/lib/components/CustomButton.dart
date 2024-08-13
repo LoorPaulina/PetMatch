@@ -14,7 +14,7 @@ class CustomButton extends StatelessWidget {
     required this.onPressed,
     this.backgroundColor = Colors.blue,
     this.textColor = Colors.white,
-    this.borderRadius = 8.0,
+    this.borderRadius = 10.0,
     this.elevation = 2.0,
     this.padding = const EdgeInsets.symmetric(vertical: 8.0, horizontal: 32.0),
     super.key,
@@ -32,8 +32,10 @@ class CustomButton extends StatelessWidget {
         elevation: elevation, // Shadow elevation
         padding: padding, // Button padding
       ),
-      child:
-          Text(style: const TextStyle(color: Colors.white, fontSize: 20), text),
+      child: Text(
+          style: const TextStyle(
+              color: Colors.white, fontSize: 20, fontFamily: 'LexendDeca'),
+          text),
     );
   }
 }
