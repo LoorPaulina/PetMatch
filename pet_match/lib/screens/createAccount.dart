@@ -3,6 +3,7 @@ import 'package:flutter/widgets.dart';
 import 'package:pet_match/constants.dart';
 import 'package:pet_match/components/CustomInput.dart';
 import 'package:pet_match/components/CustomButton.dart';
+import 'package:pet_match/screens/login.dart';
 
 class CreateAccount extends StatefulWidget {
   @override
@@ -50,15 +51,20 @@ class CreateAcountState extends State<CreateAccount> {
                             mainAxisAlignment: MainAxisAlignment.center,
                             children: [
                               Custominput(
-                                label: "EMAIL",
+                                label: "NOMBRE DE USUARIO",
                                 controller: TextEditingController(),
                               ),
-                              SizedBox(height: screenHeight * 0.1),
+                              SizedBox(height: screenHeight * 0.04),
+                              Custominput(
+                                label: "CORREO",
+                                controller: TextEditingController(),
+                              ),
+                              SizedBox(height: screenHeight * 0.04),
                               Custominput(
                                 label: "CONTRASEÑA",
                                 controller: TextEditingController(),
                               ),
-                              SizedBox(height: screenHeight * 0.1),
+                              SizedBox(height: screenHeight * 0.04),
                               //deberia ser un stack
 
                               Container(
@@ -68,22 +74,12 @@ class CreateAcountState extends State<CreateAccount> {
                                   child: Column(
                                     children: [
                                       CustomButton(
-                                        text: "   INICIAR SESIÓN   ",
-                                        onPressed: () {},
-                                        backgroundColor: textColor,
-                                        textColor: Colors.white,
-                                        borderRadius: 10.0,
-                                        elevation: 5.0,
-                                      ),
-                                      const SizedBox(height: 20),
-                                      CustomButton(
                                         text: "     REGISTRARSE    ",
                                         onPressed: () {
                                           Navigator.push(
                                             context,
                                             MaterialPageRoute(
-                                                builder: (context) =>
-                                                    CreateAccount()),
+                                                builder: (context) => Login()),
                                           );
                                         },
                                         backgroundColor:

@@ -1,0 +1,80 @@
+CREATE DATABASE petmatch;
+USE petmatch;
+
+CREATE TABLE Usuario (
+    codigo INT auto_increment PRIMARY KEY,
+    email VARCHAR(255) NOT NULL,
+    contrasena VARCHAR(255) NOT NULL,
+    nombre VARCHAR(255) NOT NULL,
+    apellido VARCHAR(255) NOT NULL,
+    num_adopciones INT DEFAULT 0,
+    cantidad_donaciones INT DEFAULT 0,
+    ocupacion VARCHAR(255),
+    biografia TEXT,
+    carta_motivacional TEXT,
+    rol_de_pago VARCHAR(50)
+);
+
+-- Creación de la tabla Donaciones
+CREATE TABLE Donaciones (
+    codigo INT auto_increment PRIMARY KEY,
+    codigo_usuario INT,
+    monto DECIMAL(10, 2) NOT NULL,
+    fecha_donacion DATE NOT NULL,
+    FOREIGN KEY (codigo_usuario) REFERENCES Usuario(codigo)
+);
+
+-- Creación de la tabla Animal
+CREATE TABLE Animal (
+    codigo INT auto_increment PRIMARY KEY,
+    nombre VARCHAR(255) NOT NULL,
+    edad INT,
+    peso DECIMAL(5, 2),
+    sexo VARCHAR(10),
+    estado_adopcion VARCHAR(20),
+    altura DECIMAL(5, 2)
+);
+
+-- Creación de la tabla Adopcion
+CREATE TABLE Adopcion (
+    codigo INT auto_increment PRIMARY KEY,
+    codigo_usuario INT,
+    codigo_animal INT,
+    FOREIGN KEY (codigo_usuario) REFERENCES Usuario(codigo),
+    FOREIGN KEY (codigo_animal) REFERENCES Animal(codigo)
+);
+
+-- Inserciones en la tabla Usuario
+INSERT INTO Usuario (email, contrasena, nombre, apellido, num_adopciones, cantidad_donaciones, ocupacion, biografia, carta_motivacional, rol_de_pago)
+VALUES 
+('juan@example.com', 'password123', 'Juan', 'Perez', 2, 3, 'Ingeniero', 'Amo a los animales y me encanta ayudar.', '/ruta/a/carta_juan.pdf', '/ruta/a/rol_pago_juan.pdf'),
+('maria@example.com', 'password123', 'Maria', 'Gonzalez', 1, 2, 'Doctora', 'Tengo una pasión por el bienestar animal.', '/ruta/a/carta_maria.pdf', '/ruta/a/rol_pago_maria.pdf'),
+('luis@example.com', 'password123', 'Luis', 'Martinez', 0, 1, 'Profesor', 'Me interesa educar a mis hijos sobre la responsabilidad de cuidar mascotas.', '/ruta/a/carta_luis.pdf', '/ruta/a/rol_pago_luis.pdf'),
+('ana@example.com', 'password123', 'Ana', 'Rodriguez', 3, 4, 'Abogada', 'He adoptado varios animales y deseo continuar.', '/ruta/a/carta_ana.pdf', '/ruta/a/rol_pago_ana.pdf'),
+('pedro@example.com', 'password123', 'Pedro', 'Lopez', 0, 0, 'Estudiante', 'Me encantan los animales.', '/ruta/a/carta_pedro.pdf', '/ruta/a/rol_pago_pedro.pdf'),
+('admin@live.com', 'admin', 'Admin', 'User', 0, 0, 'Administrador', 'Usuario administrador del sistema.', '/ruta/a/carta_admin.pdf', '/ruta/a/rol_pago_admin.pdf');
+
+-- Inserciones en la tabla Animal
+INSERT INTO Animal (nombre, edad, peso, sexo, estado_adopcion, altura)
+VALUES 
+('Max', 3, 25.5, 'Macho', 'Adoptado', 50.5),
+('Luna', 2, 20.3, 'Hembra', 'Disponible', 45.0),
+('Rocky', 4, 30.2, 'Macho', 'Disponible', 60.0),
+('Bella', 1, 18.9, 'Hembra', 'Adoptado', 40.2),
+('Charlie', 5, 35.6, 'Macho', 'Disponible', 55.0);
+
+-- Inserciones en la tabla Donaciones
+INSERT INTO Donaciones (codigo_usuario, monto, fecha_donacion)
+VALUES 
+(1, 100.00, '2024-08-01'),
+(1, 50.00, '2024-08-10'),
+(2, 200.00, '2024-07-15'),
+(4, 150.00, '2024-08-05'),
+(4, 75.00, '2024-08-14');
+
+-- Inserciones en la tabla Adopcion
+INSERT INTO Adopcion (codigo_usuario, codigo_animal)
+VALUES 
+(1, 1),  -- Juan adoptó a Max
+(2, 4),  -- Maria adoptó a Bella
+(4, 2);  -- Ana adoptó a Luna

@@ -1,8 +1,11 @@
+import 'dart:convert';
+
 import 'package:flutter/material.dart';
 import 'package:pet_match/components/CustomButton.dart';
 import 'package:pet_match/components/CustomInput.dart';
 import 'package:pet_match/constants.dart';
 import 'package:pet_match/screens/createAccount.dart';
+import 'package:http/http.dart' as http;
 
 class Login extends StatefulWidget {
   @override
@@ -10,6 +13,31 @@ class Login extends StatefulWidget {
 }
 
 class LoginState extends State<Login> {
+  final TextEditingController _email = TextEditingController();
+  final TextEditingController _password = TextEditingController();
+  Future<void> log_in() async {
+    final response = await http.post(
+      Uri.parse("http:127.0.0.1:5000/login"),
+      headers: <String, String>{
+        'Content-type': 'application/json; charset=UTF-8',
+      },
+      body: jsonEncode(<String, String>{
+        'email': _email.text,
+        'password': _password.text,
+      }),
+    );
+    if (response.statusCode == 200) {
+      final Map<String, dynamic> data = jsonDecode(response.body);
+      if (data['status'] == 'success') {
+        print(data['message']);
+      } else {
+        print(data['message']);
+      }
+    } else {
+      print("Server error: ${response.statusCode}");
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     // Get screen dimensions
@@ -52,12 +80,12 @@ class LoginState extends State<Login> {
                             children: [
                               Custominput(
                                 label: "EMAIL",
-                                controller: TextEditingController(),
+                                controller: _email,
                               ),
                               SizedBox(height: screenHeight * 0.1),
                               Custominput(
                                 label: "CONTRASEÑA",
-                                controller: TextEditingController(),
+                                controller: _password,
                               ),
                               SizedBox(height: screenHeight * 0.1),
                               //deberia ser un stack
@@ -70,7 +98,9 @@ class LoginState extends State<Login> {
                                     children: [
                                       CustomButton(
                                         text: "   INICIAR SESIÓN   ",
-                                        onPressed: () {},
+                                        onPressed: () async {
+                                          await log_in();
+                                        },
                                         backgroundColor: textColor,
                                         textColor: Colors.white,
                                         borderRadius: 10.0,
