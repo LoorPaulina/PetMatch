@@ -1,33 +1,6 @@
 // To parse this JSON data, do
 //
 //     final welcome = welcomeFromJson(jsonString);
-
-import 'dart:convert';
-
-Welcome welcomeFromJson(String str) => Welcome.fromJson(json.decode(str));
-
-String welcomeToJson(Welcome data) => json.encode(data.toJson());
-
-class Welcome {
-  String msg;
-  Usuario usuario;
-
-  Welcome({
-    required this.msg,
-    required this.usuario,
-  });
-
-  factory Welcome.fromJson(Map<String, dynamic> json) => Welcome(
-        msg: json["msg"],
-        usuario: Usuario.fromJson(json["usuario"]),
-      );
-
-  Map<String, dynamic> toJson() => {
-        "msg": msg,
-        "usuario": usuario.toJson(),
-      };
-}
-
 class Usuario {
   String apellido;
   String biografia;

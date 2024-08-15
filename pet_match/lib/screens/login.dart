@@ -4,6 +4,8 @@ import 'package:flutter/material.dart';
 import 'package:pet_match/components/CustomButton.dart';
 import 'package:pet_match/components/CustomInput.dart';
 import 'package:pet_match/constants.dart';
+import 'package:pet_match/models/users.dart';
+import 'package:pet_match/screens/main_window.dart';
 import 'package:pet_match/screens/createAccount.dart';
 import 'package:http/http.dart' as http;
 
@@ -15,26 +17,40 @@ class Login extends StatefulWidget {
 class LoginState extends State<Login> {
   final TextEditingController _email = TextEditingController();
   final TextEditingController _password = TextEditingController();
-  Future<void> log_in() async {
-    final response = await http.post(
-      Uri.parse("http:127.0.0.1:5000/login"),
-      headers: <String, String>{
-        'Content-type': 'application/json; charset=UTF-8',
+  Future<void> logIn(String email, String password) async {
+    final url = Uri.parse("http://localhost:5000/login");
+    final body_peticion = jsonEncode({
+      'email': email,
+      'password': password,
+    });
+    final respuesta = await http.post(
+      url,
+      headers: {
+        'Content-Type': 'application/json', // Define que el contenido es JSON
       },
-      body: jsonEncode(<String, String>{
-        'email': _email.text,
-        'password': _password.text,
-      }),
+      body: body_peticion,
     );
-    if (response.statusCode == 200) {
-      final Map<String, dynamic> data = jsonDecode(response.body);
-      if (data['status'] == 'success') {
-        print(data['message']);
+    if (respuesta.statusCode == 200) {
+      //solicitud exitosa
+
+      final respuesta_json = jsonDecode(respuesta.body);
+      if (respuesta_json["msg"] == "successful") {
+        Usuario usuario_loggeado = Usuario.fromJson(respuesta_json['usuario']);
+        Navigator.push(
+          context,
+          MaterialPageRoute(
+              builder: (context) => MainWindow(usuario: usuario_loggeado)),
+        );
+        //navego a la ventana por que el acceso fue exitoso
       } else {
-        print(data['message']);
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(content: Text('Credenciales incorrectas')),
+        );
       }
     } else {
-      print("Server error: ${response.statusCode}");
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(content: Text('Error al conectar con el servidor')),
+      );
     }
   }
 
@@ -99,7 +115,8 @@ class LoginState extends State<Login> {
                                       CustomButton(
                                         text: "   INICIAR SESIÓN   ",
                                         onPressed: () async {
-                                          await log_in();
+                                          await logIn(
+                                              _email.text, _password.text);
                                         },
                                         backgroundColor: textColor,
                                         textColor: Colors.white,
