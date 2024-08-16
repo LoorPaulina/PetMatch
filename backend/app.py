@@ -1,6 +1,7 @@
 from flask import Flask, json,jsonify, request
 from flask_cors import CORS
 import mysql.connector
+import datetime
 #creo el proyecto flask 
 app= Flask(__name__)
 #permito que reciba peticiones de todas las direcciones
@@ -61,7 +62,34 @@ def createAccount():
       return jsonify({"msg": "Failed to create account", "error": str(e)}), 500
     finally:
          db.close()
+@app.route('/getTotalDonaciones', methods=['GET'])
+def getTotalDonaciones():
+    #dado el id de un usuario me devuelve el total de donaciones que ha realizado
+    db=obtener_conexion();
+    data=request.json
+    total_donaciones=0;
+    with db.cursor() as cursor: 
+            usuario_id=data.get("id");  
+            func_agregacion="""SELECT COUNT(codigo_usuario) AS totalDonaciones FROM Donaciones WHERE codigo_usuario=%s;"""
+            cursor.execute(func_agregacion,(usuario_id,));
+            total_donaciones=cursor.fetchone();
+    db.close();
+    return jsonify({"msg":"transaccion exitosa", "total":total_donaciones[0]}),201
 
+@app.route('/getTotalAdopciones', methods=['GET'])
+def getTotalAdopciones():
+    #dado el id de un usuario me devuelve el total de donaciones que ha realizado
+    db=obtener_conexion();
+    data=request.json
+    total_adopciones=0;
+    with db.cursor() as cursor: 
+            usuario_id=data.get("id");  
+            func_agregacion="""SELECT COUNT(codigo_usuario) AS totalAdopciones FROM Adopcion WHERE codigo_usuario=%s;"""
+            cursor.execute(func_agregacion,(usuario_id,));
+            total_adopciones=cursor.fetchone();
+    db.close();
+    return jsonify({"msg":"transaccion exitosa", "total":total_adopciones[0]}),201
+    
 @app.route('/getMascotas',methods=['GET'])
 def getMascotas():
     conexion = obtener_conexion()
@@ -87,6 +115,34 @@ def getMascotas():
 
     return jsonify({"data": mascotas_json}), 201
 
+@app.route('/registrarDonacion', methods=['POST'])
+def registrarDonacion():
+    #cuando el usuario hace una donacion la registra en la tabla donaciones
+    #que debo recibir para registrar la donacion?
+    #usuario que realizo la donacion , monto, fecha de donacion 
+    data=request.json;
+    
+    conection=obtener_conexion();
+    try:
+        id_usuario=data.get('codigo');
+        id_usuario=int(id_usuario);
+        monto_donacion=data.get('monto');
+        fecha_donacion=datetime.datetime.now().date();
+        fecha_donacion=fecha_donacion.strftime('%Y-%m-%d');
+        with conection.cursor() as cursor:
+            query="""INSERT INTO Donaciones (codigo_usuario, monto, fecha_donacion)
+            VALUES (%s, %s, %s)"""
+            cursor.execute(query,(id_usuario,float(monto_donacion),fecha_donacion));
+            conection.commit();
+        return jsonify({"msg":"se registro la donacion"}),201;
+        
+
+    except Exception as e:
+        print(e)
+        conection.rollback()
+        return jsonify({"msg": "Failed to register donation", "error": str(e)}), 500
+    finally:
+        conection.close();
 #registrar ficha de donante
 @app.route('/actualizarFicha',methods=['PUT'])
 def actualizarFicha():

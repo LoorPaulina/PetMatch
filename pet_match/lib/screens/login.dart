@@ -33,11 +33,10 @@ class LoginState extends State<Login> {
     if (respuesta.statusCode == 200) {
       //solicitud exitosa
       final respuesta_json = jsonDecode(respuesta.body);
-      Usuario usuario_loggeado = Usuario.fromJson(respuesta_json['usuario']);
+      usuario_loggeado = Usuario.fromJson(respuesta_json['usuario']);
       Navigator.push(
         context,
-        MaterialPageRoute(
-            builder: (context) => MainWindow(usuario: usuario_loggeado)),
+        MaterialPageRoute(builder: (context) => MainWindow()),
       );
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(content: Text('LogIn exitoso')),
