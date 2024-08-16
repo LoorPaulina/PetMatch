@@ -8,10 +8,11 @@ class MainWindow extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final datos = usuario.toJson();
     return Scaffold(
       appBar: AppBar(title: Text("Main Window")),
       body: Center(
-        child: Text('Bienvenido, ${usuario.nombre} ${usuario.apellido}'),
+        child: Text('usuario $datos'),
       ),
     );
   }

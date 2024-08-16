@@ -87,7 +87,35 @@ def getMascotas():
 
     return jsonify({"data": mascotas_json}), 201
 
-
+#registrar ficha de donante
+@app.route('/actualizarFicha',methods=['PUT'])
+def actualizarFicha():
+    db_conection=obtener_conexion();
+    data=request.json;
+    try:
+        #id unico(aqui se hace la insercion)
+        id=data.get('codigo');
+        id=int(id);
+        #datos del adoptante
+        nombre=data.get('nombre');
+        apellido=data.get('apellido');
+        ocupacion=data.get('ocupacion');
+        descripcion=data.get('descripcion');
+        rolPago=data.get('rol');
+        motivacion=data.get('motivacion');
+        with db_conection.cursor() as cursor:
+            cursor.execute("""UPDATE usuario
+            SET nombre = %s, apellido = %s, ocupacion=%s,
+            biografia=%s,   rol_de_pago=%s, carta_motivacional=%s             
+            WHERE codigo = %s;""",(nombre,apellido,ocupacion,descripcion,rolPago,motivacion,id));
+            db_conection.commit();
+        return jsonify({"msg":"se realizo el update exitoso"}),201
+    except Exception as e:
+      print(e)
+      db_conection.rollback()
+      return jsonify({"msg": "Failed to update", "error": str(e)}), 500
+    finally:
+         db_conection.close()
 
 if __name__ == '__main__':
         app.run(host='0.0.0.0', port=5000, debug=True)
