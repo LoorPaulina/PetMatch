@@ -18,7 +18,7 @@ class LoginState extends State<Login> {
   final TextEditingController _email = TextEditingController();
   final TextEditingController _password = TextEditingController();
   Future<void> logIn(String email, String password) async {
-    final url = Uri.parse("http://localhost:5000/login");
+    final url = Uri.parse("http://10.0.2.2:5000/login");
     final body_peticion = jsonEncode({
       'email': email,
       'password': password,
@@ -32,24 +32,24 @@ class LoginState extends State<Login> {
     );
     if (respuesta.statusCode == 200) {
       //solicitud exitosa
-
       final respuesta_json = jsonDecode(respuesta.body);
-      if (respuesta_json["msg"] == "successful") {
-        Usuario usuario_loggeado = Usuario.fromJson(respuesta_json['usuario']);
-        Navigator.push(
-          context,
-          MaterialPageRoute(
-              builder: (context) => MainWindow(usuario: usuario_loggeado)),
-        );
-        //navego a la ventana por que el acceso fue exitoso
-      } else {
-        ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(content: Text('Credenciales incorrectas')),
-        );
-      }
+      Usuario usuario_loggeado = Usuario.fromJson(respuesta_json['usuario']);
+      Navigator.push(
+        context,
+        MaterialPageRoute(
+            builder: (context) => MainWindow(usuario: usuario_loggeado)),
+      );
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(content: Text('LogIn exitoso')),
+      );
+      //navego a la ventana por que el acceso fue exitoso
+    } else if (respuesta.statusCode == 401) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(content: Text('Credenciales incorrectas')),
+      );
     } else {
       ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(content: Text('Error al conectar con el servidor')),
+        SnackBar(content: Text('Error del servidor')),
       );
     }
   }
