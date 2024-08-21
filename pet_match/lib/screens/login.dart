@@ -60,6 +60,7 @@ class LoginState extends State<Login> {
     final double screenWidth = MediaQuery.of(context).size.width;
 
     return Scaffold(
+      resizeToAvoidBottomInset: true,
       body: Padding(
         padding: EdgeInsets.only(top: screenHeight * 0.1),
         child: Center(
@@ -83,9 +84,9 @@ class LoginState extends State<Login> {
                           padding: EdgeInsets.symmetric(
                               horizontal: screenWidth * 0.05),
                           width: screenWidth,
-                          decoration: BoxDecoration(
+                          decoration: const BoxDecoration(
                             color: Color.fromARGB(235, 204, 210, 186),
-                            borderRadius: const BorderRadius.only(
+                            borderRadius: BorderRadius.only(
                               topLeft: Radius.circular(80),
                               topRight: Radius.circular(80),
                             ),

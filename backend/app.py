@@ -52,12 +52,12 @@ def login():
 def createAccount():
     db = obtener_conexion()
     try:
-      data=request.json
-      email=data.get('email')
-      nombre=data.get('nombre')
-      apellido=data.get('apellido')
-      ocupacion=data.get('ocupacion')
-      password=data.get('password')
+        data=request.json
+        email=data.get('email')
+        nombre=data.get('nombre')
+        apellido=data.get('apellido')
+        ocupacion=data.get('ocupacion')
+        password=data.get('password')
 
         cursor = db.cursor(dictionary=True)
         cursor.execute("""INSERT INTO Usuario (email, contrasena, nombre,
