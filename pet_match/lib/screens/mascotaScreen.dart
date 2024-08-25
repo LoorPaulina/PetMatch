@@ -1,21 +1,57 @@
 import 'package:flutter/material.dart';
 import 'package:pet_match/constants.dart';
 
-class MascotaScreen extends StatelessWidget {
+class MascotaScreen extends StatefulWidget {
+  @override
+  _MascotaScreenState createState() => _MascotaScreenState();
+}
+
+class _MascotaScreenState extends State<MascotaScreen>
+    with SingleTickerProviderStateMixin {
+  late TabController _tabController;
+
+  @override
+  void initState() {
+    super.initState();
+    _tabController = TabController(length: 2, vsync: this);
+  }
+
+  @override
+  void dispose() {
+    _tabController.dispose();
+    super.dispose();
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        backgroundColor: Colors.transparent,
+        backgroundColor: secundaryColor,
+        toolbarHeight: MediaQuery.sizeOf(context).height * 0.08,
         elevation: 0,
-        leading: IconButton(
-          icon: Icon(Icons.close, color: Colors.black),
-          onPressed: () {
-            Navigator.pop(context);
-          },
+        bottom: TabBar(
+          controller: _tabController,
+          labelColor: Colors.white,
+          indicatorColor: Colors.white,
+          tabs: [
+            Tab(text: "Perfil"),
+            Tab(text: "Vacunas"),
+          ],
         ),
       ),
-      body: Padding(
+      body: TabBarView(
+        controller: _tabController,
+        children: [
+          _buildPerfilTab(),
+          _buildVacunasTab(),
+        ],
+      ),
+    );
+  }
+
+  Widget _buildPerfilTab() {
+    return SingleChildScrollView(
+      child: Padding(
         padding: const EdgeInsets.all(16.0),
         child: Column(
           children: [
@@ -77,7 +113,7 @@ class MascotaScreen extends StatelessWidget {
                 color: Colors.grey[700],
               ),
             ),
-            Spacer(),
+            SizedBox(height: 20), // Añadir espacio fijo en lugar de Spacer
             Row(
               children: [
                 Expanded(
@@ -90,7 +126,7 @@ class MascotaScreen extends StatelessWidget {
                       padding: EdgeInsets.symmetric(vertical: 15),
                     ),
                     onPressed: () {},
-                    child: Row(
+                    child: const Row(
                       mainAxisAlignment: MainAxisAlignment.center,
                       children: [
                         Icon(Icons.pets, color: Colors.white),
@@ -120,7 +156,7 @@ class MascotaScreen extends StatelessWidget {
                       mainAxisAlignment: MainAxisAlignment.center,
                       children: [
                         Icon(Icons.monetization_on, color: Colors.white),
-                        SizedBox(width: 8), // Espacio entre el icono y el texto
+                        SizedBox(width: 8),
                         Text(
                           'DONAR',
                           style: TextStyle(fontSize: 20, color: Colors.white),
@@ -130,6 +166,99 @@ class MascotaScreen extends StatelessWidget {
                   ),
                 ),
               ],
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+
+  Widget _buildVacunasTab() {
+    return SingleChildScrollView(
+      child: Padding(
+        padding: const EdgeInsets.all(16.0),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Card(
+              shape: RoundedRectangleBorder(
+                borderRadius: BorderRadius.circular(15),
+              ),
+              elevation: 3,
+              child: Padding(
+                padding: const EdgeInsets.all(16.0),
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Text(
+                      'Vacunas',
+                      style: TextStyle(
+                        fontSize: 18,
+                        fontWeight: FontWeight.bold,
+                      ),
+                    ),
+                    SizedBox(height: 10),
+                    _buildVacunaRow('Rabia', '2024-08-05', Colors.blue),
+                    _buildVacunaRow('Moquillo', '2024-08-05', Colors.orange),
+                    SizedBox(height: 10),
+                    _buildVerMas('VER TODAS LAS VACUNAS'),
+                  ],
+                ),
+              ),
+            ),
+            SizedBox(height: 20),
+            Card(
+              shape: RoundedRectangleBorder(
+                borderRadius: BorderRadius.circular(15),
+              ),
+              elevation: 3,
+              child: Padding(
+                padding: const EdgeInsets.all(16.0),
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Text(
+                      'Desparasitación Interna',
+                      style: TextStyle(
+                        fontSize: 18,
+                        fontWeight: FontWeight.bold,
+                      ),
+                    ),
+                    SizedBox(height: 10),
+                    _buildDesparasitacionRow(
+                        'Última desparasitación', '2024-07-10', Colors.grey),
+                    SizedBox(height: 10),
+                    _buildVerMas('VER TODAS LAS DESPARASITACIONES'),
+                  ],
+                ),
+              ),
+            ),
+            SizedBox(height: 20),
+            Card(
+              shape: RoundedRectangleBorder(
+                borderRadius: BorderRadius.circular(15),
+              ),
+              elevation: 3,
+              child: Padding(
+                padding: const EdgeInsets.all(16.0),
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Text(
+                      'Esterilización',
+                      style: TextStyle(
+                        fontSize: 18,
+                        fontWeight: FontWeight.bold,
+                      ),
+                    ),
+                    SizedBox(height: 10),
+                    _buildDesparasitacionRow(
+                        'Sí aplica', '2024-07-10', Colors.grey),
+                    SizedBox(height: 10),
+                    _buildVerMas('VER MÁS INFORMACIÓN'),
+                  ],
+                ),
+              ),
             ),
           ],
         ),
@@ -162,6 +291,66 @@ class MascotaScreen extends StatelessWidget {
             ),
           ),
         ],
+      ),
+    );
+  }
+
+  Widget _buildVacunaRow(String titulo, String subtitulo, Color color) {
+    return Row(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        Icon(Icons.brightness_1, color: color, size: 12),
+        SizedBox(width: 10),
+        Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Text(
+              titulo,
+              style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
+            ),
+            SizedBox(height: 5),
+            Text(
+              subtitulo,
+              style: TextStyle(fontSize: 14, color: Colors.grey[700]),
+            ),
+          ],
+        ),
+      ],
+    );
+  }
+
+  Widget _buildDesparasitacionRow(
+      String titulo, String subtitulo, Color color) {
+    return Row(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        Icon(Icons.brightness_1, color: color, size: 12),
+        SizedBox(width: 10),
+        Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Text(
+              titulo,
+              style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
+            ),
+            SizedBox(height: 5),
+            Text(
+              subtitulo,
+              style: TextStyle(fontSize: 14, color: Colors.grey[700]),
+            ),
+          ],
+        ),
+      ],
+    );
+  }
+
+  Widget _buildVerMas(String texto) {
+    return Text(
+      texto,
+      style: TextStyle(
+        fontSize: 14,
+        color: Colors.green,
+        fontWeight: FontWeight.bold,
       ),
     );
   }
