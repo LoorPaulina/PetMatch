@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:pet_match/constants.dart';
+import 'package:pet_match/screens/donation_window.dart';
+import 'package:pet_match/screens/formularioAdopcion.dart';
 
 class AdoptanteScreen extends StatelessWidget {
   @override
@@ -83,7 +85,13 @@ class AdoptanteScreen extends StatelessWidget {
                       ),
                       padding: EdgeInsets.symmetric(vertical: 15),
                     ),
-                    onPressed: () {},
+                    onPressed: () {
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                            builder: (context) => FormularioDonanteScreen()),
+                      );
+                    },
                     child: Row(
                       mainAxisAlignment: MainAxisAlignment.center,
                       children: [
@@ -108,7 +116,11 @@ class AdoptanteScreen extends StatelessWidget {
                       padding: EdgeInsets.symmetric(vertical: 15),
                     ),
                     onPressed: () {
-                      // Lógica para donar
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                            builder: (context) => DonationScreen()),
+                      );
                     },
                     child: Row(
                       mainAxisAlignment: MainAxisAlignment.center,

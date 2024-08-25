@@ -38,7 +38,7 @@ class LoginState extends State<Login> {
       usuario_loggeado = Usuario.fromJson(respuesta_json['usuario']);
       Navigator.push(
         context,
-        MaterialPageRoute(builder: (context) => Mascotasadopcion()),
+        MaterialPageRoute(builder: (context) => MainWindow()),
       );
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(content: Text('LogIn exitoso')),
