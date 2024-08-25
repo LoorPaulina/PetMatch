@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:pet_match/constants.dart';
 import 'package:pet_match/models/users.dart';
 import 'package:pet_match/screens/login.dart';
+import 'package:pet_match/screens/donation_window.dart';
 
 class MainWindow extends StatelessWidget {
   @override
@@ -50,14 +51,16 @@ class MainWindow extends StatelessWidget {
         ),
         ButtonWithImage(
           imagePath: "assets/dollar-symbol.png",
-          label: 'ADOPTAR',
+          label: 'DONAR',
           onPressed: () {
-            //accion de adoptar
+            Navigator.of(context).pushReplacement(
+              MaterialPageRoute(builder: (context) => DonationScreen()),
+            );
           },
         ),
         ButtonWithImage(
           imagePath: "assets/user.png",
-          label: 'ADOPTAR',
+          label: 'PERFIL',
           onPressed: () {
             //accion de adoptar
           },
