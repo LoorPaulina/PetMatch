@@ -8,6 +8,8 @@ import 'package:pet_match/models/users.dart';
 import 'package:pet_match/screens/main_window.dart';
 import 'package:pet_match/screens/createAccount.dart';
 import 'package:http/http.dart' as http;
+import 'package:pet_match/screens/mascotasAdopcion.dart';
+import 'package:pet_match/screens/profile.dart';
 
 class Login extends StatefulWidget {
   @override
@@ -36,7 +38,7 @@ class LoginState extends State<Login> {
       usuario_loggeado = Usuario.fromJson(respuesta_json['usuario']);
       Navigator.push(
         context,
-        MaterialPageRoute(builder: (context) => MainWindow()),
+        MaterialPageRoute(builder: (context) => Mascotasadopcion()),
       );
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(content: Text('LogIn exitoso')),
@@ -60,6 +62,7 @@ class LoginState extends State<Login> {
     final double screenWidth = MediaQuery.of(context).size.width;
 
     return Scaffold(
+      resizeToAvoidBottomInset: true,
       body: Padding(
         padding: EdgeInsets.only(top: screenHeight * 0.1),
         child: Center(
@@ -83,9 +86,9 @@ class LoginState extends State<Login> {
                           padding: EdgeInsets.symmetric(
                               horizontal: screenWidth * 0.05),
                           width: screenWidth,
-                          decoration: BoxDecoration(
+                          decoration: const BoxDecoration(
                             color: Color.fromARGB(235, 204, 210, 186),
-                            borderRadius: const BorderRadius.only(
+                            borderRadius: BorderRadius.only(
                               topLeft: Radius.circular(80),
                               topRight: Radius.circular(80),
                             ),
