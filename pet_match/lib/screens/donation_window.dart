@@ -5,6 +5,7 @@ import 'package:pet_match/screens/login.dart';
 import 'package:pet_match/components/CustomButton.dart';
 import 'package:pet_match/components/CustomInput.dart';
 import 'package:pet_match/screens/main_window.dart';
+import 'package:pet_match/screens/donation_success.dart';
 
 class DonationScreen extends StatelessWidget {
   final TextEditingController nameController = TextEditingController();
@@ -125,7 +126,10 @@ class DonationScreen extends StatelessWidget {
               CustomButton(
                 text: "DONAR",
                 onPressed: () {
-                  // Acción al presionar el botón de donar
+                  Navigator.of(context).pushReplacement(
+                    MaterialPageRoute(
+                        builder: (context) => DonationSuccessScreen()),
+                  );
                 },
                 backgroundColor: Colors.grey,
                 textColor: Colors.white,
