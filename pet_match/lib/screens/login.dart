@@ -8,6 +8,8 @@ import 'package:pet_match/models/users.dart';
 import 'package:pet_match/screens/main_window.dart';
 import 'package:pet_match/screens/createAccount.dart';
 import 'package:http/http.dart' as http;
+import 'package:pet_match/screens/mascotasAdopcion.dart';
+import 'package:pet_match/screens/profile.dart';
 
 class Login extends StatefulWidget {
   @override
@@ -36,7 +38,7 @@ class LoginState extends State<Login> {
       usuario_loggeado = Usuario.fromJson(respuesta_json['usuario']);
       Navigator.push(
         context,
-        MaterialPageRoute(builder: (context) => MainWindow()),
+        MaterialPageRoute(builder: (context) => Mascotasadopcion()),
       );
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(content: Text('LogIn exitoso')),
