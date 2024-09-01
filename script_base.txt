@@ -1,80 +1,173 @@
-CREATE DATABASE petmatch;
-USE petmatch;
+DROP DATABASE IF EXISTS petmatch;
+create database petmatch;
+use petmatch;
 
-CREATE TABLE Usuario (
-    codigo INT auto_increment PRIMARY KEY,
-    email VARCHAR(255) NOT NULL,
-    contrasena VARCHAR(255) NOT NULL,
-    nombre VARCHAR(255) NOT NULL,
-    apellido VARCHAR(255) NOT NULL,
-    num_adopciones INT DEFAULT 0,
-    cantidad_donaciones INT DEFAULT 0,
-    ocupacion VARCHAR(255),
-    biografia TEXT,
-    carta_motivacional TEXT,
-    rol_de_pago VARCHAR(50)
+/*TABLA CATEGORIA (ESPECIES DE ANIMALES)*/
+CREATE TABLE `categoria` (
+  `id` int NOT NULL,
+  `descripcion` varchar(50) DEFAULT NULL,
+  PRIMARY KEY (`id`)
+);
+INSERT INTO `categoria` VALUES (1,'Perro'),(2,'Gato'),(3,'Hamster');
+
+/*TABLA ANIMAL (MASCOTAS)*/
+CREATE TABLE `animal` (
+  `codigo` int NOT NULL AUTO_INCREMENT,
+  `nombre` varchar(255) NOT NULL,
+  `fecha_nacimiento` date DEFAULT NULL,
+  `peso` decimal(5,2) DEFAULT NULL,
+  `sexo` varchar(10) DEFAULT NULL,
+  `estado_adopcion` varchar(20) DEFAULT NULL,
+  `altura` decimal(5,2) DEFAULT NULL,
+  `especie` int DEFAULT NULL,
+  `photo_url` varchar(50) DEFAULT NULL,
+  `en_adopcion_desde` date DEFAULT NULL,
+  `historia` varchar(100) DEFAULT NULL,
+  PRIMARY KEY (`codigo`),
+  KEY `especie` (`especie`),
+  FOREIGN KEY (`especie`) REFERENCES `categoria` (`id`)
 );
 
--- Creación de la tabla Donaciones
-CREATE TABLE Donaciones (
-    codigo INT auto_increment PRIMARY KEY,
-    codigo_usuario INT,
-    monto DECIMAL(10, 2) NOT NULL,
-    fecha_donacion DATE NOT NULL,
-    FOREIGN KEY (codigo_usuario) REFERENCES Usuario(codigo)
+INSERT INTO `animal` VALUES
+(1,'Max','2019-03-01',25.50,'M','Disponible',60.00,1,'max_photo.jpg','2024-01-15','Friendly and energetic.'),
+(2,'Luna','2021-06-15',4.80,'F','Adoptado',30.00,2,'luna_photo.jpg','2024-02-10','Calm and affectionate.'),
+(3,'Rex','2020-11-22',28.00,'M','Disponible',62.00,1,'rex_photo.jpg','2024-03-20','Loves to play.'),
+(4,'Bella','2018-08-30',12.00,'F','Disponible',40.00,1,'bella_photo.jpg','2024-04-05','Very friendly and playful.'),
+(5,'Oliver','2022-01-10',3.50,'M','Disponible',25.00,2,'oliver_photo.jpg','2024-05-20','Curious and playful.'),
+(6,'Milo','2019-11-15',5.00,'M','Adoptado',20.00,2,'milo_photo.jpg','2024-06-15','Loves to cuddle and sleep.'),
+(7,'Lola','2021-04-25',8.00,'F','Disponible',35.00,1,'lola_photo.jpg','2024-07-10','Energetic and loves running.'),
+(8,'Simba','2019-12-05',6.00,'M','Disponible',45.00,1,'simba_photo.jpg','2024-08-01','Brave and strong.'),
+(9,'Nala','2020-07-12',7.50,'F','Adoptado',28.00,2,'nala_photo.jpg','2024-09-15','Playful and affectionate.'),
+(10,'Sparky','2022-03-22',2.50,'M','Disponible',18.00,3,'sparky_photo.jpg','2024-10-05','Lively and energetic.'),
+(11,'Chloe','2019-09-18',4.50,'F','Disponible',24.00,2,'chloe_photo.jpg','2024-11-10','Sweet and gentle.'),
+(12,'Rocky','2018-12-01',6.50,'M','Disponible',30.00,1,'rocky_photo.jpg','2024-12-01','Strong and loyal.'),
+(13,'Daisy','2021-05-30',3.00,'F','Adoptado',20.00,2,'daisy_photo.jpg','2024-12-15','Playful and affectionate.'),
+(14,'Buddy','2020-10-05',7.00,'M','Disponible',35.00,1,'buddy_photo.jpg','2024-01-20','Friendly and outgoing.'),
+(15,'Mittens','2019-06-15',5.50,'F','Disponible',22.00,2,'mittens_photo.jpg','2024-02-25','Loves to nap and play with toys.'),
+(16,'Coco','2021-11-10',4.00,'M','Disponible',30.00,2,'coco_photo.jpg','2024-03-15','Affectionate and loves attention.'),
+(17,'Pepper','2022-02-18',2.00,'F','Adoptado',15.00,3,'pepper_photo.jpg','2024-04-10','Energetic and loves to play.');
+
+/*TABLA DE USUARIOS*/
+CREATE TABLE `usuario` (
+  `codigo` int NOT NULL AUTO_INCREMENT,
+  `email` varchar(255) NOT NULL,
+  `contrasena` varchar(255) NOT NULL,
+  `nombre` varchar(255) NOT NULL,
+  `apellido` varchar(255) NOT NULL,
+  `num_adopciones` int DEFAULT '0',
+  `cantidad_donaciones` int DEFAULT '0',
+  `ocupacion` varchar(255) DEFAULT NULL,
+  `biografia` text,
+  `carta_motivacional` text,
+  `rol_de_pago` varchar(50) DEFAULT NULL,
+  PRIMARY KEY (`codigo`)
 );
 
--- Creación de la tabla Animal
-CREATE TABLE Animal (
-    codigo INT auto_increment PRIMARY KEY,
-    nombre VARCHAR(255) NOT NULL,
-    edad INT,
-    peso DECIMAL(5, 2),
-    sexo VARCHAR(10),
-    estado_adopcion VARCHAR(20),
-    altura DECIMAL(5, 2)
+INSERT INTO `usuario` VALUES (1,'juan@example.com','password123','Juan','Perez',2,3,'Ingeniero','Amo a los animales y me encanta ayudar.','/ruta/a/carta_juan.pdf','/ruta/a/rol_pago_juan.pdf'),
+(2,'maria@example.com','password123','Maria','Gonzalez',1,2,'Doctora','Tengo una pasión por el bienestar animal.','/ruta/a/carta_maria.pdf','/ruta/a/rol_pago_maria.pdf'),
+(3,'luis@example.com','password123','Luis','Martinez',0,1,'Profesor','Me interesa educar a mis hijos sobre la responsabilidad de cuidar mascotas.','/ruta/a/carta_luis.pdf','/ruta/a/rol_pago_luis.pdf'),
+(4,'ana@example.com','password123','Ana','Rodriguez',3,4,'Abogada','He adoptado varios animales y deseo continuar.','/ruta/a/carta_ana.pdf','/ruta/a/rol_pago_ana.pdf'),
+(5,'pedro@example.com','password123','Pedro','Lopez',0,0,'Estudiante','Me encantan los animales.','/ruta/a/carta_pedro.pdf','/ruta/a/rol_pago_pedro.pdf'),
+(6,'admin@live.com','admin','Admin','User',0,0,'Administrador','Usuario administrador del sistema.','/ruta/a/carta_admin.pdf','/ruta/a/rol_pago_admin.pdf'),
+(7,'loorpaulinamar@gmail.com','password','Paulina','Loor',0,0,'estudiante','Amante de los animales <3','',''),(8,'loorpaulina@gmail.com','123','Paulina','Loor',0,0,'estudiante','','','');
+
+/*donaciones*/
+CREATE TABLE `donaciones` (
+  `codigo` int NOT NULL AUTO_INCREMENT,
+  `codigo_usuario` int DEFAULT NULL,
+  `monto` decimal(10,2) NOT NULL,
+  `fecha_donacion` date NOT NULL,
+  PRIMARY KEY (`codigo`),
+  FOREIGN KEY (`codigo_usuario`) REFERENCES `usuario` (`codigo`)
 );
 
--- Creación de la tabla Adopcion
-CREATE TABLE Adopcion (
-    codigo INT auto_increment PRIMARY KEY,
-    codigo_usuario INT,
-    codigo_animal INT,
-    FOREIGN KEY (codigo_usuario) REFERENCES Usuario(codigo),
-    FOREIGN KEY (codigo_animal) REFERENCES Animal(codigo)
+INSERT INTO `donaciones` VALUES (1,1,100.00,'2024-08-01'),
+(2,1,50.00,'2024-08-10'),
+(3,2,200.00,'2024-07-15'),
+(4,4,150.00,'2024-08-05'),
+(5,4,75.00,'2024-08-14');
+
+/*adopciones*/
+CREATE TABLE `adopcion` (
+  `codigo` int NOT NULL AUTO_INCREMENT,
+  `codigo_usuario` int DEFAULT NULL,
+  `codigo_animal` int DEFAULT NULL,
+  PRIMARY KEY (`codigo`),
+  FOREIGN KEY (`codigo_usuario`) REFERENCES `usuario` (`codigo`),
+  FOREIGN KEY (`codigo_animal`) REFERENCES `animal` (`codigo`)
 );
 
--- Inserciones en la tabla Usuario
-INSERT INTO Usuario (email, contrasena, nombre, apellido, num_adopciones, cantidad_donaciones, ocupacion, biografia, carta_motivacional, rol_de_pago)
-VALUES 
-('juan@example.com', 'password123', 'Juan', 'Perez', 2, 3, 'Ingeniero', 'Amo a los animales y me encanta ayudar.', '/ruta/a/carta_juan.pdf', '/ruta/a/rol_pago_juan.pdf'),
-('maria@example.com', 'password123', 'Maria', 'Gonzalez', 1, 2, 'Doctora', 'Tengo una pasión por el bienestar animal.', '/ruta/a/carta_maria.pdf', '/ruta/a/rol_pago_maria.pdf'),
-('luis@example.com', 'password123', 'Luis', 'Martinez', 0, 1, 'Profesor', 'Me interesa educar a mis hijos sobre la responsabilidad de cuidar mascotas.', '/ruta/a/carta_luis.pdf', '/ruta/a/rol_pago_luis.pdf'),
-('ana@example.com', 'password123', 'Ana', 'Rodriguez', 3, 4, 'Abogada', 'He adoptado varios animales y deseo continuar.', '/ruta/a/carta_ana.pdf', '/ruta/a/rol_pago_ana.pdf'),
-('pedro@example.com', 'password123', 'Pedro', 'Lopez', 0, 0, 'Estudiante', 'Me encantan los animales.', '/ruta/a/carta_pedro.pdf', '/ruta/a/rol_pago_pedro.pdf'),
-('admin@live.com', 'admin', 'Admin', 'User', 0, 0, 'Administrador', 'Usuario administrador del sistema.', '/ruta/a/carta_admin.pdf', '/ruta/a/rol_pago_admin.pdf');
+INSERT INTO `adopcion` VALUES (1,1,1),(2,2,3),(3,4,2);
 
--- Inserciones en la tabla Animal
-INSERT INTO Animal (nombre, edad, peso, sexo, estado_adopcion, altura)
-VALUES 
-('Max', 3, 25.5, 'Macho', 'Adoptado', 50.5),
-('Luna', 2, 20.3, 'Hembra', 'Disponible', 45.0),
-('Rocky', 4, 30.2, 'Macho', 'Disponible', 60.0),
-('Bella', 1, 18.9, 'Hembra', 'Adoptado', 40.2),
-('Charlie', 5, 35.6, 'Macho', 'Disponible', 55.0);
+/*vacunas*/
+CREATE TABLE `vacunas` (
+  `id` int NOT NULL,
+  `nombre` varchar(50) DEFAULT NULL,
+  `especie` int DEFAULT NULL,
+  PRIMARY KEY (`id`),
+  FOREIGN KEY (`especie`) REFERENCES `categoria` (`id`)
+);
 
--- Inserciones en la tabla Donaciones
-INSERT INTO Donaciones (codigo_usuario, monto, fecha_donacion)
-VALUES 
-(1, 100.00, '2024-08-01'),
-(1, 50.00, '2024-08-10'),
-(2, 200.00, '2024-07-15'),
-(4, 150.00, '2024-08-05'),
-(4, 75.00, '2024-08-14');
+INSERT INTO `vacunas` VALUES (1,'Rabia',1),
+(2,'Parvovirus',1),
+(3,'Leptospirosis',1),
+(4,'Moquillo',1),
+(5,'Leucemia Felina',2),
+(6,'Panleucopenia',2),
+(7,'Rinotraqueitis',2),
+(8,'Tifus',3);
 
--- Inserciones en la tabla Adopcion
-INSERT INTO Adopcion (codigo_usuario, codigo_animal)
-VALUES 
-(1, 1),  -- Juan adoptó a Max
-(2, 4),  -- Maria adoptó a Bella
-(4, 2);  -- Ana adoptó a Luna
+CREATE TABLE `healthrecords` (
+  `id` int NOT NULL,
+  `fecha` date DEFAULT NULL,
+  `ultima_desparasitacion` date DEFAULT NULL,
+  `ultima_vacuna` date DEFAULT NULL,
+  `esterilizado` tinyint(1) DEFAULT NULL,
+  `animal_id` int DEFAULT NULL,
+  PRIMARY KEY (`id`),
+  FOREIGN KEY (`animal_id`) REFERENCES `animal` (`codigo`)
+);
+
+INSERT INTO `healthrecords` VALUES
+(1,'2024-08-01','2024-07-15','2024-07-20',1,1),
+(2,'2024-08-05','2024-06-20','2024-07-25',0,2),
+(3,'2024-08-10','2024-07-10','2024-08-01',1,3),
+(4,'2024-08-15','2024-07-25','2024-08-05',1,4),
+(5,'2024-09-01','2024-08-15','2024-08-20',0,5),
+(6,'2024-09-10','2024-08-25','2024-09-01',1,6),
+(7,'2024-09-20','2024-09-05','2024-09-15',0,7),
+(8,'2024-10-01','2024-09-10','2024-09-25',1,8),
+(9,'2024-10-10','2024-09-20','2024-10-01',0,9),
+(10,'2024-10-15','2024-09-25','2024-10-05',1,10),
+(11,'2024-11-01','2024-10-10','2024-10-15',1,11),
+(12,'2024-11-05','2024-10-20','2024-10-25',0,12),
+(13,'2024-11-10','2024-10-30','2024-11-05',1,13),
+(14,'2024-12-01','2024-11-15','2024-11-20',0,14),
+(15,'2024-12-10','2024-11-25','2024-12-01',1,15);
+
+CREATE TABLE `healthrecord_vacunas` (
+  `health_record_id` int NOT NULL,
+  `vacuna_id` int NOT NULL,
+  PRIMARY KEY (`health_record_id`,`vacuna_id`),
+  FOREIGN KEY (`health_record_id`) REFERENCES `healthrecords` (`id`),
+  FOREIGN KEY (`vacuna_id`) REFERENCES `vacunas` (`id`)
+);
+
+INSERT INTO `healthrecord_vacunas` VALUES
+(1,1),
+(1,2),
+(2,3),
+(3,5),
+(4,4),
+(4,6),
+(5,7),
+(6,1),
+(7,2),
+(8,3),
+(8,5),
+(9,6),
+(10,7),
+(11,8),
+(12,8),
+(13,1),
+(13,4);
