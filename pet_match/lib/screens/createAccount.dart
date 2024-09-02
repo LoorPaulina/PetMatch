@@ -90,12 +90,10 @@ class CreateAcountState extends State<CreateAccount> {
     }
 
     return Scaffold(
-      resizeToAvoidBottomInset:
-          true, // Esto permite que la pantalla se ajuste cuando el teclado esté visible
+      resizeToAvoidBottomInset: true,
       body: SingleChildScrollView(
-        // Asegura que la pantalla sea desplazable cuando hay mucho contenido o el teclado aparece
         child: Container(
-          height: screenHeight, // Hace que el contenido cubra toda la pantalla
+          height: screenHeight,
           child: Padding(
             padding: EdgeInsets.only(top: screenHeight * 0.1),
             child: Center(

@@ -22,30 +22,30 @@ CREATE TABLE `animal` (
   `especie` int DEFAULT NULL,
   `photo_url` varchar(50) DEFAULT NULL,
   `en_adopcion_desde` date DEFAULT NULL,
-  `historia` varchar(100) DEFAULT NULL,
+  `historia` varchar(500) DEFAULT NULL,
   PRIMARY KEY (`codigo`),
   KEY `especie` (`especie`),
   FOREIGN KEY (`especie`) REFERENCES `categoria` (`id`)
 );
 
 INSERT INTO `animal` VALUES
-(1,'Max','2019-03-01',25.50,'M','Disponible',60.00,1,'max_photo.jpg','2024-01-15','Friendly and energetic.'),
-(2,'Luna','2021-06-15',4.80,'F','Adoptado',30.00,2,'luna_photo.jpg','2024-02-10','Calm and affectionate.'),
-(3,'Rex','2020-11-22',28.00,'M','Disponible',62.00,1,'rex_photo.jpg','2024-03-20','Loves to play.'),
-(4,'Bella','2018-08-30',12.00,'F','Disponible',40.00,1,'bella_photo.jpg','2024-04-05','Very friendly and playful.'),
-(5,'Oliver','2022-01-10',3.50,'M','Disponible',25.00,2,'oliver_photo.jpg','2024-05-20','Curious and playful.'),
-(6,'Milo','2019-11-15',5.00,'M','Adoptado',20.00,2,'milo_photo.jpg','2024-06-15','Loves to cuddle and sleep.'),
-(7,'Lola','2021-04-25',8.00,'F','Disponible',35.00,1,'lola_photo.jpg','2024-07-10','Energetic and loves running.'),
-(8,'Simba','2019-12-05',6.00,'M','Disponible',45.00,1,'simba_photo.jpg','2024-08-01','Brave and strong.'),
-(9,'Nala','2020-07-12',7.50,'F','Adoptado',28.00,2,'nala_photo.jpg','2024-09-15','Playful and affectionate.'),
-(10,'Sparky','2022-03-22',2.50,'M','Disponible',18.00,3,'sparky_photo.jpg','2024-10-05','Lively and energetic.'),
-(11,'Chloe','2019-09-18',4.50,'F','Disponible',24.00,2,'chloe_photo.jpg','2024-11-10','Sweet and gentle.'),
-(12,'Rocky','2018-12-01',6.50,'M','Disponible',30.00,1,'rocky_photo.jpg','2024-12-01','Strong and loyal.'),
-(13,'Daisy','2021-05-30',3.00,'F','Adoptado',20.00,2,'daisy_photo.jpg','2024-12-15','Playful and affectionate.'),
-(14,'Buddy','2020-10-05',7.00,'M','Disponible',35.00,1,'buddy_photo.jpg','2024-01-20','Friendly and outgoing.'),
-(15,'Mittens','2019-06-15',5.50,'F','Disponible',22.00,2,'mittens_photo.jpg','2024-02-25','Loves to nap and play with toys.'),
-(16,'Coco','2021-11-10',4.00,'M','Disponible',30.00,2,'coco_photo.jpg','2024-03-15','Affectionate and loves attention.'),
-(17,'Pepper','2022-02-18',2.00,'F','Adoptado',15.00,3,'pepper_photo.jpg','2024-04-10','Energetic and loves to play.');
+(1, 'Max', '2019-03-01', 25.50, 'M', 'Disponible', 60.00, 1, 'max_photo', '2024-01-15', 'Max fue encontrado solo en un parque, abandonado pero nunca sin energía. Es un perro activo que adora correr y jugar al aire libre. Max es perfecto para una familia que disfruta de la aventura y está buscando un compañero fiel para explorar el mundo juntos. ¡Ven a conocerlo y deja que Max te robe el corazón!'),
+(2, 'Luna', '2021-06-15', 4.80, 'F', 'Adoptado', 30.00, 2, 'luna_photo', '2024-02-10', 'Luna fue rescatada de un vecindario después de haber sido abandonada. Es una gatita muy cariñosa que disfruta de las siestas al sol y de acurrucarse en el sofá. Luna es ideal para un hogar tranquilo donde pueda recibir mucho amor y atención. Si buscas una compañera leal que te acompañe en cada paso del camino, Luna es la indicada.'),
+(3, 'Rex', '2020-11-22', 28.00, 'M', 'Disponible', 62.00, 1, 'rex_photo', '2024-03-20', 'Rex fue hallado vagando solo en las montañas, y desde entonces ha demostrado ser un perro increíblemente valiente y leal. Tiene un espíritu aventurero y siempre está listo para jugar. Rex es ideal para una familia activa que busca un compañero con quien disfrutar de actividades al aire libre. ¡Dale una oportunidad a Rex y él te dará toda su devoción!'),
+(4, 'Bella', '2018-08-30', 12.00, 'F', 'Disponible', 40.00, 1, 'bella_photo', '2024-04-05', 'Bella fue rescatada de las calles y desde entonces ha mostrado ser una perrita extremadamente amigable y juguetona. Le encanta estar rodeada de personas y otros animales. Bella sería una adición maravillosa para cualquier hogar que busque una compañera leal y llena de vida. Ven a conocer a Bella, ¡ella te está esperando!'),
+(5, 'Oliver', '2022-01-10', 3.50, 'M', 'Disponible', 25.00, 2, 'oliver_photo', '2024-05-20', 'Oliver fue encontrado solo y asustado, pero rápidamente se convirtió en un gatito curioso y juguetón. Siempre está buscando su próximo gran descubrimiento. Oliver sería perfecto para un hogar que aprecia la energía juvenil y la curiosidad infinita de un gatito. Si estás listo para aventuras diarias, Oliver está listo para ser tu compañero.'),
+(6, 'Milo', '2019-11-15', 5.00, 'M', 'Adoptado', 20.00, 2, 'milo_photo', '2024-06-15', 'Milo fue rescatado de un refugio abarrotado. Es un gatito dulce que adora acurrucarse y dormir junto a sus humanos. Milo busca un hogar tranquilo donde pueda recibir el amor y la atención que se merece. Si buscas un amigo silencioso y tierno, ¡Milo es tu gatito ideal!'),
+(7, 'Lola', '2021-04-25', 8.00, 'F', 'Disponible', 35.00, 1, 'lola_photo', '2024-07-10', 'Lola fue encontrada corriendo por las calles, llena de energía y con una sonrisa en el rostro. Es una perrita que adora correr y jugar. Lola sería ideal para una familia activa que quiere una compañera para todas sus aventuras. Ven a conocer a Lola, ¡ella te llenará de alegría!'),
+(8, 'Simba', '2019-12-05', 6.00, 'M', 'Disponible', 45.00, 1, 'simba_photo', '2024-08-01', 'Simba fue encontrado solo, pero nunca ha perdido su espíritu fuerte. Es un perro valiente y protector que busca un hogar donde pueda ser parte de la familia. Simba es perfecto para alguien que busca un compañero leal y un protector fiel. ¡Dale una oportunidad a Simba y él te dará todo su amor y coraje!'),
+(9, 'Nala', '2020-07-12', 7.50, 'F', 'Adoptado', 28.00, 2, 'nala_photo', '2024-09-15', 'Nala fue rescatada después de ser abandonada. Es juguetona y muy cariñosa, perfecta para una familia que busca un gato interactivo y afectuoso. Nala busca un hogar donde pueda recibir el amor que merece. ¿Te gustaría conocer a Nala? ¡Ella está lista para ser tu nueva mejor amiga!'),
+(10, 'Sparky', '2022-03-22', 2.50, 'M', 'Disponible', 18.00, 3, 'sparky_photo', '2024-10-05', 'Sparky fue encontrado deambulando cerca de un parque. Es un perro lleno de vida y energía, siempre listo para una buena carrera o un juego de búsqueda. Sparky necesita un hogar que pueda seguirle el ritmo y ofrecerle mucha actividad. ¡Si estás buscando un compañero lleno de vida, Sparky es tu perro ideal!'),
+(11, 'Chloe', '2019-09-18', 4.50, 'F', 'Disponible', 24.00, 2, 'chloe_photo', '2024-11-10', 'Chloe fue rescatada de un vecindario y desde entonces ha mostrado ser una gatita dulce y gentil. Disfruta de la tranquilidad y de recibir caricias. Chloe sería ideal para un hogar que busque un compañero relajado y amoroso. Ven a conocer a Chloe y déjate enamorar por su ternura.'),
+(12, 'Rocky', '2018-12-01', 6.50, 'M', 'Disponible', 30.00, 1, 'rocky_photo', '2024-12-01', 'Rocky fue rescatado de un refugio donde no había espacio suficiente para él. Es un perro fuerte y leal que busca una familia a la que pueda proteger y amar. Rocky es perfecto para alguien que busca un perro protector y lleno de carácter. ¡Adopta a Rocky y él te lo agradecerá con amor incondicional!'),
+(13, 'Daisy', '2021-05-30', 3.00, 'F', 'Adoptado', 20.00, 2, 'daisy_photo', '2024-12-15', 'Daisy fue encontrada en un estacionamiento, pero eso no ha frenado su espíritu juguetón. Es una gatita que adora jugar y recibir mimos. Daisy es perfecta para una familia que busca un gato activo y cariñoso. ¡Conoce a Daisy y deja que ella llene tu hogar de alegría!'),
+(14, 'Buddy', '2020-10-05', 7.00, 'M', 'Disponible', 35.00, 1, 'buddy_photo', '2024-01-20', 'Buddy fue encontrado en un refugio, donde rápidamente se hizo notar por su personalidad amigable y extrovertida. Es un perro que adora conocer gente nueva y siempre está buscando hacer amigos. Buddy sería ideal para un hogar que busca un perro social y lleno de energía. ¡Ven a conocer a Buddy, él te está esperando con los brazos abiertos!'),
+(15, 'Mittens', '2019-06-15', 5.50, 'F', 'Disponible', 22.00, 2, 'mittens_photo', '2024-02-25', 'Mittens fue rescatada de una situación de hacinamiento y desde entonces ha demostrado ser una gatita que adora las siestas y jugar con sus juguetes favoritos. Es perfecta para alguien que busca un gato tranquilo pero juguetón. ¡Adopta a Mittens y ella llenará tu vida de momentos dulces!'),
+(16, 'Coco', '2021-11-10', 4.00, 'M', 'Disponible', 30.00, 2, 'coco_photo', '2024-03-15', 'Coco fue encontrado abandonado y desde entonces ha demostrado ser extremadamente cariñoso. Le encanta la atención y siempre está buscando ser el centro de la atención. Coco sería ideal para un hogar que puede ofrecerle mucho amor y compañía. ¡Conoce a Coco y él te demostrará cuánto amor tiene para dar!'),
+(17, 'Pepper', '2022-02-18', 2.00, 'F', 'Adoptado', 15.00, 3, 'pepper_photo', '2024-04-10', 'Pepper fue rescatada de una situación de abandono. Es una perrita muy enérgica que adora jugar y correr. Pepper necesita un hogar donde pueda gastar toda su energía y recibir mucho amor. ¡Ven a conocer a Pepper, y déjate contagiar por su alegría y vitalidad!');
 
 /*TABLA DE USUARIOS*/
 CREATE TABLE `usuario` (
@@ -148,26 +148,37 @@ INSERT INTO `healthrecords` VALUES
 CREATE TABLE `healthrecord_vacunas` (
   `health_record_id` int NOT NULL,
   `vacuna_id` int NOT NULL,
+  `fecha_vacuna` date DEFAULT NULL,
   PRIMARY KEY (`health_record_id`,`vacuna_id`),
   FOREIGN KEY (`health_record_id`) REFERENCES `healthrecords` (`id`),
   FOREIGN KEY (`vacuna_id`) REFERENCES `vacunas` (`id`)
 );
 
 INSERT INTO `healthrecord_vacunas` VALUES
-(1,1),
-(1,2),
-(2,3),
-(3,5),
-(4,4),
-(4,6),
-(5,7),
-(6,1),
-(7,2),
-(8,3),
-(8,5),
-(9,6),
-(10,7),
-(11,8),
-(12,8),
-(13,1),
-(13,4);
+(1, 1, '2023-01-10'),
+(1, 2, '2023-02-15'),
+(2, 3, '2023-03-20'),
+(3, 5, '2023-04-05'),
+(4, 4, '2023-05-10'),
+(4, 6, '2023-06-15'),
+(5, 7, '2023-07-20'),
+(6, 1, '2023-08-25'),
+(7, 2, '2023-09-30'),
+(8, 3, '2023-10-05'),
+(8, 5, '2023-11-10'),
+(9, 6, '2023-12-15'),
+(10, 7, '2024-01-05'),
+(11, 8, '2024-02-10'),
+(12, 8, '2024-03-15'),
+(13, 1, '2024-04-20'),
+(13, 4, '2024-05-25');
+
+CREATE VIEW historialMedico AS
+SELECT nombre,esterilizado,ultima_desparasitacion
+FROM healthrecords
+join animal where healthrecords.animal_id=animal.codigo;
+
+CREATE VIEW vacunasView AS
+SELECT animal.nombre,fecha_vacuna,vacunas.nombre as vacuna
+FROM healthrecord_vacunas
+join healthrecords,animal,vacunas where healthrecords.id=healthrecord_vacunas.health_record_id and healthrecords.animal_id=animal.codigo and vacunas.id=healthrecord_vacunas.health_record_id;

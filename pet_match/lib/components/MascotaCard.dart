@@ -1,13 +1,28 @@
 import 'package:flutter/material.dart';
+import 'package:pet_match/constants.dart';
 import 'package:pet_match/screens/mascotaScreen.dart';
 
 class Mascotacard extends StatelessWidget {
-  const Mascotacard({super.key});
+  final String url;
+  final String nombre;
+  final String edad;
+  final String peso;
+  final String enAdopcionDesde;
+  final String sexo;
+  const Mascotacard(
+      {super.key,
+      required this.url,
+      required this.nombre,
+      required this.edad,
+      required this.peso,
+      required this.enAdopcionDesde,
+      required this.sexo});
 
   @override
   Widget build(BuildContext context) {
     return GestureDetector(
       onTap: () {
+        selectedMascota = nombre;
         Navigator.push(
           context,
           MaterialPageRoute(builder: (context) => MascotaScreen()),
@@ -31,8 +46,8 @@ class Mascotacard extends StatelessWidget {
           children: [
             ClipRRect(
               borderRadius: BorderRadius.circular(15),
-              child: Image.network(
-                'https://i.ibb.co/PDkyB85/Dise-o-sin-t-tulo-4.png',
+              child: Image.asset(
+                'assets/mascotas/$url.jpeg',
                 width: 100,
                 height: 120,
                 fit: BoxFit.cover,
@@ -45,35 +60,35 @@ class Mascotacard extends StatelessWidget {
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     Text(
-                      'PELUSA',
-                      style: TextStyle(
+                      nombre,
+                      style: const TextStyle(
                         fontSize: 18,
                         fontWeight: FontWeight.bold,
                       ),
                     ),
                     Text(
-                      'SIN RAZA',
+                      "En adopción hace: $enAdopcionDesde",
                       style: TextStyle(
                         fontSize: 14,
                         color: Colors.grey[600],
                       ),
                     ),
-                    SizedBox(height: 40),
+                    const SizedBox(height: 40),
                     Row(
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       children: [
                         Text(
-                          'EDAD: 2    PESO: 1KG',
+                          'EDAD: $edad    PESO: ${peso}KG',
                           style: TextStyle(
                             fontSize: 12,
                             color: Colors.grey[600],
                           ),
                         ),
                         Icon(
-                          Icons.female,
+                          sexo == 'F' ? Icons.female : Icons.male,
                           color: Colors.grey[600],
                           size: 16,
-                        ),
+                        )
                       ],
                     ),
                   ],

@@ -1,7 +1,7 @@
 from flask import Flask, jsonify, request
 from flask_cors import CORS
 import mysql.connector
-import datetime
+from datetime import datetime, timedelta
 # creo el proyecto flask
 app = Flask(__name__)
 # permito que reciba peticiones de todas las direcciones
@@ -154,29 +154,53 @@ def getTotalAdopciones():
 def getMascotas():
     conexion = obtener_conexion()
     mascotas = []
+    
+    tipo_animal = request.args.get('tipo', default='', type=str)
+    antiguedad = request.args.get('antiguedad', default='', type=str)
+
     try:
         with conexion.cursor() as cursor:
-            cursor.execute("SELECT * FROM Animal")
+            # Base de la consulta SQL
+            sql_query = """
+                SELECT Animal.*, Categoria.descripcion as especie_descripcion
+                FROM Animal
+                JOIN Categoria ON Animal.especie = Categoria.id
+                WHERE 1=1
+            """
+            
+            # Agregar condiciones de filtro si existen
+            params = []
+            if tipo_animal:
+                sql_query += " AND Categoria.descripcion = %s"
+                params.append(tipo_animal)
+            if antiguedad:
+                antiguedad_fecha = calcular_fecha_antiguedad(antiguedad)
+                sql_query += " AND Animal.en_adopcion_desde < %s"
+                params.append(antiguedad_fecha)
+
+            # Ejecutar consulta
+            cursor.execute(sql_query, params)
             mascotas = cursor.fetchall()
 
         mascotas_json = []
         for mascota in mascotas:
-            categoria = ''
+            print(mascota)
             try:
-                with conexion.cursor() as cursor:
-                    cursor.execute("SELECT * FROM Categoria WHERE Categoria.id = %s", (mascota[7],))
-                    categoria = cursor.fetchone()[1]
-            except Exception as e:
-                print(f"Error fetching category: {e}")
+                peso = float(mascota[3]) if mascota[3] else None
+                altura = float(mascota[6]) if mascota[6] else None
+            except ValueError:
+                peso = None
+                altura = None
 
             mascota_dict = {
+                "codigo": mascota[0],
                 'nombre': mascota[1],
                 'fecha_nacimiento': mascota[2],
-                'peso': mascota[3],
+                'peso': peso,
                 'sexo': mascota[4],
                 'estado_adopcion': mascota[5],
-                'altura': mascota[6],
-                'especie': categoria,
+                'altura': altura,
+                'especie': mascota[11],  # Aquí usamos el índice correcto para la descripción de la especie
                 'photo_url': mascota[8],
                 'en_adopcion_desde': mascota[9],
                 'historia': mascota[10]
@@ -187,9 +211,22 @@ def getMascotas():
         print(f"Error fetching mascotas: {e}")
         return jsonify({"error": "Internal Server Error"}), 500
     finally:
-        conexion.close()
+        conexion.close() 
 
     return jsonify({"data": mascotas_json}), 200
+
+def calcular_fecha_antiguedad(antiguedad):
+    hoy = datetime.now()
+    if antiguedad == 'Mayor a 1 mes':
+        return hoy - timedelta(days=30)
+    elif antiguedad == 'Mayor a 3 meses':
+        return hoy - timedelta(days=90)
+    elif antiguedad == 'Mayor a 6 meses':
+        return hoy - timedelta(days=180)
+    elif antiguedad == 'Mayor a 1 año':
+        return hoy - timedelta(days=365)
+    return hoy
+
 
 
 @app.route('/getMascotasPorCategoria/<string:categoria>', methods=['GET'])
@@ -302,25 +339,18 @@ def getMascotasDESC():
 
     return jsonify({"data": mascotas_json}), 200
 
-@app.route('/getHealthyRecord/<string:idMascota>', methods=['GET'])
-def getHealthyRecord(idMascota):
+@app.route('/getHealthyRecord/<string:nombre>', methods=['GET'])
+def getHealthyRecord(nombre):
     conexion = obtener_conexion()
     try:
         with conexion.cursor() as cursor:
-            cursor.execute("SELECT * FROM HealthRecords WHERE animal_id = %s", (idMascota,))
+            cursor.execute("select * from historialMedico WHERE nombre = %s", (nombre,))
             mascota = cursor.fetchone()
 
             mascota_dict = {
-                'nombre': mascota[1],
-                'fecha_nacimiento': mascota[2],
-                'peso': mascota[3],
-                'sexo': mascota[4],
-                'estado_adopcion': mascota[5],
-                'altura': mascota[6],
-                'especie': mascota[7],
-                'photo_url': mascota[8],
-                'en_adopcion_desde': mascota[9],
-                'historia': mascota[10]
+                'nombre': mascota[0],
+                'esterilizado': mascota[1],
+                'ultima_desparasitacion': mascota[2],
             }
 
     except Exception as e:
@@ -330,6 +360,31 @@ def getHealthyRecord(idMascota):
         conexion.close()
 
     return jsonify({"data": mascota_dict}), 200
+
+@app.route('/getVacunas/<string:nombre>', methods=['GET'])
+def getVacunas(nombre):
+    conexion = obtener_conexion()
+    try:
+        with conexion.cursor() as cursor:
+            cursor.execute("select * from vacunasView where nombre= %s", (nombre,))
+            vacunas = cursor.fetchall()
+
+            vacunasFetch = []
+            for vacuna in vacunas:
+                vacuna_dict = {
+                    'nombre': vacuna[0],
+                    'fecha': vacuna[1],
+                    'vacuna': vacuna[2],
+                }
+                vacunasFetch.append(vacuna_dict)
+            
+    except Exception as e:
+        print(f"Error fetching mascotas: {e}")
+        return jsonify({"error": "Internal Server Error"}), 500
+    finally:
+        conexion.close()
+
+    return jsonify({"data": vacunasFetch}), 200
 
 
 @app.route('/registrarDonacion', methods=['POST'])

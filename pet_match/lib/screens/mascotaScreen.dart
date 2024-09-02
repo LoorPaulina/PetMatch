@@ -1,5 +1,10 @@
+import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
+import 'package:intl/intl.dart';
 import 'package:pet_match/constants.dart';
+import 'package:pet_match/models/historialMedico.dart';
+import '../models/mascotas.dart';
+import '../models/vacuna.dart';
 
 class MascotaScreen extends StatefulWidget {
   @override
@@ -9,11 +14,60 @@ class MascotaScreen extends StatefulWidget {
 class _MascotaScreenState extends State<MascotaScreen>
     with SingleTickerProviderStateMixin {
   late TabController _tabController;
+  Animal mascota = Animal(codigo: 0, nombre: '', estadoAdopcion: '', sexo: '');
+  String get nombre => mascota.nombre;
+  HistorialMedico historialMedico = HistorialMedico(
+      nombre: '', esterilizado: '', ultimaDesparasitacion: DateTime.now());
+
+  Vacuna vacuna = Vacuna(nombre: '', vacuna: 'vacuna', fecha: DateTime.now());
+  List<Vacuna> vacunas = [];
+
+  void getAnimalSeleccionado() {
+    for (int i = 0; i < mascotasFetched.length; i++) {
+      if (mascotasFetched[i].nombre == selectedMascota) {
+        mascota = mascotasFetched[i];
+      }
+    }
+  }
+
+  Future<void> _getHistorialMedico() async {
+    try {
+      final response = await Dio().get('${urlBack}getHealthyRecord/$nombre');
+      var data = response.data["data"];
+      HistorialMedico mascotaHistorial = HistorialMedico.fromJson(data);
+      setState(() {
+        historialMedico = mascotaHistorial;
+      });
+    } catch (e) {
+      print(e);
+    }
+  }
+
+  Future<void> _Vacunas() async {
+    try {
+      final response = await Dio().get('${urlBack}getVacunas/$nombre');
+      List<Vacuna> fetchedVacunas = [];
+
+      for (var item in response.data["data"]) {
+        Vacuna vacunaI = Vacuna.fromJson(item);
+        fetchedVacunas.add(vacunaI);
+      }
+
+      setState(() {
+        vacunas = fetchedVacunas;
+      });
+    } catch (e) {
+      print(e);
+    }
+  }
 
   @override
   void initState() {
     super.initState();
     _tabController = TabController(length: 2, vsync: this);
+    getAnimalSeleccionado();
+    _getHistorialMedico();
+    _Vacunas();
   }
 
   @override
@@ -33,7 +87,7 @@ class _MascotaScreenState extends State<MascotaScreen>
           controller: _tabController,
           labelColor: Colors.white,
           indicatorColor: Colors.white,
-          tabs: [
+          tabs: const [
             Tab(text: "Perfil"),
             Tab(text: "Vacunas"),
           ],
@@ -57,14 +111,14 @@ class _MascotaScreenState extends State<MascotaScreen>
           children: [
             ClipRRect(
               borderRadius: BorderRadius.circular(20),
-              child: Image.network(
-                'https://i.ibb.co/PDkyB85/Dise-o-sin-t-tulo-4.png',
-                width: double.infinity,
-                height: 300,
+              child: Image.asset(
+                'assets/mascotas/${mascota.photoUrl}.jpeg',
+                width: 400,
+                height: 250,
                 fit: BoxFit.cover,
               ),
             ),
-            SizedBox(height: 20),
+            const SizedBox(height: 20),
             Row(
               children: [
                 Expanded(
@@ -72,13 +126,13 @@ class _MascotaScreenState extends State<MascotaScreen>
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
                       Text(
-                        'PELUSA',
-                        style: TextStyle(
+                        mascota.nombre,
+                        style: const TextStyle(
                           fontSize: 24,
                           fontWeight: FontWeight.bold,
                         ),
                       ),
-                      SizedBox(height: 5),
+                      const SizedBox(height: 5),
                       Text(
                         'SIN RAZA',
                         style: TextStyle(
@@ -90,30 +144,31 @@ class _MascotaScreenState extends State<MascotaScreen>
                   ),
                 ),
                 Icon(
-                  Icons.female,
+                  mascota.sexo == 'F' ? Icons.female : Icons.male,
                   color: Colors.grey[600],
-                  size: 24,
-                ),
+                  size: 16,
+                )
               ],
             ),
-            SizedBox(height: 20),
+            const SizedBox(height: 20),
             Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
-                _buildInfoCard('EDAD', '2 A'),
-                _buildInfoCard('ALTURA', '60 CM'),
-                _buildInfoCard('PESO', '1.5 KG'),
+                _buildInfoCard('EDAD', mascota.edadEnTexto()),
+                _buildInfoCard('ALTURA', '${mascota.altura.toString()} cm'),
+                _buildInfoCard('PESO', '${mascota.peso.toString()} kg'),
               ],
             ),
-            SizedBox(height: 20),
+            const SizedBox(height: 20),
             Text(
-              'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.',
+              mascota.historia,
               style: TextStyle(
                 fontSize: 14,
                 color: Colors.grey[700],
               ),
             ),
-            SizedBox(height: 20), // Añadir espacio fijo en lugar de Spacer
+            const SizedBox(
+                height: 20), // Añadir espacio fijo en lugar de Spacer
             Row(
               children: [
                 Expanded(
@@ -123,7 +178,7 @@ class _MascotaScreenState extends State<MascotaScreen>
                       shape: RoundedRectangleBorder(
                         borderRadius: BorderRadius.circular(10),
                       ),
-                      padding: EdgeInsets.symmetric(vertical: 15),
+                      padding: const EdgeInsets.symmetric(vertical: 15),
                     ),
                     onPressed: () {},
                     child: const Row(
@@ -139,7 +194,7 @@ class _MascotaScreenState extends State<MascotaScreen>
                     ),
                   ),
                 ),
-                SizedBox(width: 10),
+                const SizedBox(width: 10),
                 Expanded(
                   child: ElevatedButton(
                     style: ElevatedButton.styleFrom(
@@ -147,12 +202,12 @@ class _MascotaScreenState extends State<MascotaScreen>
                       shape: RoundedRectangleBorder(
                         borderRadius: BorderRadius.circular(10),
                       ),
-                      padding: EdgeInsets.symmetric(vertical: 15),
+                      padding: const EdgeInsets.symmetric(vertical: 15),
                     ),
                     onPressed: () {
                       // Lógica para donar
                     },
-                    child: Row(
+                    child: const Row(
                       mainAxisAlignment: MainAxisAlignment.center,
                       children: [
                         Icon(Icons.monetization_on, color: Colors.white),
@@ -190,23 +245,38 @@ class _MascotaScreenState extends State<MascotaScreen>
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    Text(
+                    const Text(
                       'Vacunas',
                       style: TextStyle(
                         fontSize: 18,
                         fontWeight: FontWeight.bold,
                       ),
                     ),
-                    SizedBox(height: 10),
-                    _buildVacunaRow('Rabia', '2024-08-05', Colors.blue),
-                    _buildVacunaRow('Moquillo', '2024-08-05', Colors.orange),
-                    SizedBox(height: 10),
-                    _buildVerMas('VER TODAS LAS VACUNAS'),
+                    const SizedBox(height: 10),
+                    // Eliminar Expanded aquí
+                    ListView.builder(
+                      shrinkWrap: true,
+                      physics: NeverScrollableScrollPhysics(),
+                      itemCount: vacunas.length,
+                      itemBuilder: (context, index) {
+                        final vacuna = vacunas[index];
+                        return _buildVacunaRow(
+                          vacuna.vacuna,
+                          DateFormat("yyyy-MM-dd").format(vacuna.fecha),
+                          index % 2 == 0 ? Colors.blue : Colors.orange,
+                        );
+                      },
+                    ),
+                    const SizedBox(height: 10),
+                    GestureDetector(
+                      onTap: () => _showVacunasAlert(),
+                      child: _buildVerMas('VER TODAS LAS VACUNAS'),
+                    ),
                   ],
                 ),
               ),
             ),
-            SizedBox(height: 20),
+            const SizedBox(height: 20),
             Card(
               shape: RoundedRectangleBorder(
                 borderRadius: BorderRadius.circular(15),
@@ -217,23 +287,26 @@ class _MascotaScreenState extends State<MascotaScreen>
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    Text(
+                    const Text(
                       'Desparasitación Interna',
                       style: TextStyle(
                         fontSize: 18,
                         fontWeight: FontWeight.bold,
                       ),
                     ),
-                    SizedBox(height: 10),
+                    const SizedBox(height: 10),
                     _buildDesparasitacionRow(
-                        'Última desparasitación', '2024-07-10', Colors.grey),
-                    SizedBox(height: 10),
-                    _buildVerMas('VER TODAS LAS DESPARASITACIONES'),
+                        'Última desparasitación',
+                        DateFormat("yyyy-MM-dd")
+                            .format(historialMedico.ultimaDesparasitacion)
+                            .toString(),
+                        Colors.grey),
+                    const SizedBox(height: 10),
                   ],
                 ),
               ),
             ),
-            SizedBox(height: 20),
+            const SizedBox(height: 20),
             Card(
               shape: RoundedRectangleBorder(
                 borderRadius: BorderRadius.circular(15),
@@ -244,18 +317,17 @@ class _MascotaScreenState extends State<MascotaScreen>
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    Text(
+                    const Text(
                       'Esterilización',
                       style: TextStyle(
                         fontSize: 18,
                         fontWeight: FontWeight.bold,
                       ),
                     ),
-                    SizedBox(height: 10),
-                    _buildDesparasitacionRow(
-                        'Sí aplica', '2024-07-10', Colors.grey),
-                    SizedBox(height: 10),
-                    _buildVerMas('VER MÁS INFORMACIÓN'),
+                    const SizedBox(height: 10),
+                    _buildDesparasitacionRow('Realizada:',
+                        historialMedico.esterilizado, Colors.grey),
+                    const SizedBox(height: 10),
                   ],
                 ),
               ),
@@ -282,10 +354,10 @@ class _MascotaScreenState extends State<MascotaScreen>
               color: Colors.grey[700],
             ),
           ),
-          SizedBox(height: 5),
+          const SizedBox(height: 5),
           Text(
             value,
-            style: TextStyle(
+            style: const TextStyle(
               fontSize: 16,
               fontWeight: FontWeight.bold,
             ),
@@ -300,7 +372,7 @@ class _MascotaScreenState extends State<MascotaScreen>
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         Icon(Icons.brightness_1, color: color, size: 12),
-        SizedBox(width: 10),
+        const SizedBox(width: 10),
         Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
@@ -308,7 +380,7 @@ class _MascotaScreenState extends State<MascotaScreen>
               titulo,
               style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
             ),
-            SizedBox(height: 5),
+            const SizedBox(height: 5),
             Text(
               subtitulo,
               style: TextStyle(fontSize: 14, color: Colors.grey[700]),
@@ -325,15 +397,15 @@ class _MascotaScreenState extends State<MascotaScreen>
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         Icon(Icons.brightness_1, color: color, size: 12),
-        SizedBox(width: 10),
+        const SizedBox(width: 10),
         Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             Text(
               titulo,
-              style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
+              style: const TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
             ),
-            SizedBox(height: 5),
+            const SizedBox(height: 5),
             Text(
               subtitulo,
               style: TextStyle(fontSize: 14, color: Colors.grey[700]),
@@ -347,11 +419,45 @@ class _MascotaScreenState extends State<MascotaScreen>
   Widget _buildVerMas(String texto) {
     return Text(
       texto,
-      style: TextStyle(
+      style: const TextStyle(
         fontSize: 14,
         color: Colors.green,
         fontWeight: FontWeight.bold,
       ),
+    );
+  }
+
+  void _showVacunasAlert() {
+    showDialog(
+      context: context,
+      builder: (context) {
+        return AlertDialog(
+          title: const Text('Todas las Vacunas'),
+          content: SingleChildScrollView(
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                for (var vacuna in vacunas)
+                  _buildVacunaRow(
+                    vacuna.vacuna,
+                    DateFormat("yyyy-MM-dd").format(vacuna.fecha),
+                    vacunas.indexOf(vacuna) % 2 == 0
+                        ? Colors.blue
+                        : Colors.orange,
+                  ),
+              ],
+            ),
+          ),
+          actions: [
+            TextButton(
+              onPressed: () {
+                Navigator.of(context).pop();
+              },
+              child: const Text('Cerrar'),
+            ),
+          ],
+        );
+      },
     );
   }
 }
