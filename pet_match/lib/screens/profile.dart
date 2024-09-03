@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:pet_match/constants.dart';
 import 'package:pet_match/screens/donation_window.dart';
+import 'package:pet_match/screens/editProfile.dart';
 import 'package:pet_match/screens/formularioAdopcion.dart';
 
 class AdoptanteScreen extends StatelessWidget {
@@ -23,9 +24,9 @@ class AdoptanteScreen extends StatelessWidget {
           children: [
             ClipRRect(
               borderRadius: BorderRadius.circular(20),
-              child: Image.network(
-                'https://i.ibb.co/ZYW3VTp/brown-brim.png',
-                width: double.infinity,
+              child: Image.asset(
+                'assets/mascotas/default.jpeg',
+                width: 300,
                 height: 300,
                 fit: BoxFit.cover,
               ),
@@ -38,7 +39,9 @@ class AdoptanteScreen extends StatelessWidget {
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
                       Text(
-                        'PAULINA LOOR',
+                        usuario_loggeado!.nombre +
+                            " " +
+                            usuario_loggeado!.apellido,
                         style: TextStyle(
                           fontSize: 24,
                           fontWeight: FontWeight.bold,
@@ -52,6 +55,33 @@ class AdoptanteScreen extends StatelessWidget {
                           color: Colors.grey[600],
                         ),
                       ),
+                      SizedBox(height: 10),
+                      ElevatedButton(
+                        style: ElevatedButton.styleFrom(
+                          backgroundColor: Colors.blue,
+                          shape: RoundedRectangleBorder(
+                            borderRadius: BorderRadius.circular(10),
+                          ),
+                        ),
+                        onPressed: () {
+                          Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                                builder: (context) => EditProfileScreen()),
+                          );
+                        },
+                        child: Row(
+                          mainAxisSize: MainAxisSize.min,
+                          children: [
+                            Icon(Icons.edit, color: Colors.white),
+                            SizedBox(width: 8),
+                            Text(
+                              'EDITAR INFO',
+                              style: TextStyle(color: Colors.white),
+                            ),
+                          ],
+                        ),
+                      ),
                     ],
                   ),
                 ),
@@ -61,16 +91,42 @@ class AdoptanteScreen extends StatelessWidget {
             Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
-                _buildInfoCard('ADOPCIONES', '1'),
+                _buildInfoCard(
+                    'ADOPCIONES', usuario_loggeado!.numAdopciones.toString()),
                 _buildInfoCard('DONACIONES', '\$0.00'),
               ],
             ),
             SizedBox(height: 20),
-            Text(
-              'Soy un amante de los animales y estoy comprometido a proporcionar un hogar seguro, amoroso y estable para un perro o gato.',
-              style: TextStyle(
-                fontSize: 14,
-                color: Colors.grey[700],
+            SingleChildScrollView(
+              child: Container(
+                width: MediaQuery.of(context).size.width - 10,
+                padding: EdgeInsets.all(16),
+                decoration: BoxDecoration(
+                  color: Colors.grey[100],
+                  borderRadius: BorderRadius.circular(10),
+                  border: Border.all(color: Colors.grey[300]!),
+                ),
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Text(
+                      'Biografía',
+                      style: TextStyle(
+                        fontSize: 18,
+                        fontWeight: FontWeight.bold,
+                        color: Colors.grey[700],
+                      ),
+                    ),
+                    SizedBox(height: 10),
+                    Text(
+                      usuario_loggeado!.biografia ?? 'Sin biografía aún',
+                      style: TextStyle(
+                        fontSize: 14,
+                        color: Colors.grey[700],
+                      ),
+                    ),
+                  ],
+                ),
               ),
             ),
             Spacer(),

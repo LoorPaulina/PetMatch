@@ -84,6 +84,7 @@ def editAccount():
         email = data.get('email')
         biografia = data.get('biografia')
         ocupacion = data.get('ocupacion')
+        contrasena = data.get('contrasena')
 
         fields_to_update = []
         values = []
@@ -95,6 +96,10 @@ def editAccount():
         if biografia != '':
             fields_to_update.append("biografia = %s")
             values.append(biografia)
+        
+        if contrasena != '':
+            fields_to_update.append("contrasena = %s")
+            values.append(contrasena)
 
         print(fields_to_update)
         print(values)
