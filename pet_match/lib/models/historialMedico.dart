@@ -2,7 +2,7 @@ import 'package:intl/intl.dart';
 
 class HistorialMedico {
   final String nombre;
-  final String esterilizado; // Cambiado a String para representar 'Sí' o 'No'
+  final String esterilizado;
   final DateTime ultimaDesparasitacion;
 
   HistorialMedico({

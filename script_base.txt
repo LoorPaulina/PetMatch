@@ -182,3 +182,31 @@ CREATE VIEW vacunasView AS
 SELECT animal.nombre,fecha_vacuna,vacunas.nombre as vacuna
 FROM healthrecord_vacunas
 join healthrecords,animal,vacunas where healthrecords.id=healthrecord_vacunas.health_record_id and healthrecords.animal_id=animal.codigo and vacunas.id=healthrecord_vacunas.health_record_id;
+
+
+
+SELECT * FROM Animal join categoria where animal.especie=categoria.id;
+select * from usuario;
+
+drop table DiaDeAdopcion;
+CREATE TABLE DiaDeAdopcion (
+    id INT AUTO_INCREMENT PRIMARY KEY,
+    title VARCHAR(255) NOT NULL,
+    fecha DATE NOT NULL,
+    location VARCHAR(255) NOT NULL,
+    descripcion TEXT,
+    image VARCHAR(255),
+    likes int
+);
+
+INSERT INTO DiaDeAdopcion (title, fecha, location, descripcion, image, likes)
+VALUES 
+    ('Día de Adopción', '2024-09-12', 'Parque de las Iguanas', 'Un día especial para adoptar mascotas.', 'parqueIguanas_photo',0),
+    ('Jornada de Vacunación', '2024-09-15', 'Clínica Veterinaria Guayaquil ', 'Vacunación gratuita para mascotas adoptadas.', 'centroVeterinario_photo',1),
+    ('Evento de Recogida de Alimentos', '2024-09-20', 'Plaza San Francisco', 'Recogida de alimentos para mascotas en adopción.', 'sanFrancisco_photo',2);
+	
+-- Inserción de eventos adicionales
+INSERT INTO DiaDeAdopcion (title, fecha, location, descripcion, image, likes)
+VALUES 
+    ('Feria de Mascotas', '2024-09-12', 'Parque de las Iguanas', 'Feria con actividades y adopciones de mascotas.', 'parqueIguanas_photo',0),
+    ('Charla sobre Cuidado de Mascotas', '2024-09-30', 'Auditorio Espol', 'Charla informativa sobre el cuidado y bienestar de las mascotas.', 'espol_photo',1);

@@ -4,6 +4,7 @@ import 'package:pet_match/models/users.dart';
 import 'package:pet_match/screens/login.dart';
 import 'package:pet_match/screens/donation_window.dart';
 import 'package:pet_match/screens/donation_success.dart';
+import 'package:pet_match/screens/mapPage.dart';
 import 'package:pet_match/screens/mascotasAdopcion.dart';
 import 'package:pet_match/screens/profile.dart';
 
@@ -49,7 +50,8 @@ class MainWindow extends StatelessWidget {
           imagePath: "assets/paw.png",
           label: 'ADOPTAR',
           onPressed: () {
-            Navigator.of(context).pushReplacement(
+            Navigator.push(
+              context,
               MaterialPageRoute(builder: (context) => Mascotasadopcion()),
             );
           },
@@ -67,8 +69,19 @@ class MainWindow extends StatelessWidget {
           imagePath: "assets/user.png",
           label: 'PERFIL',
           onPressed: () {
-            Navigator.of(context).pushReplacement(
+            Navigator.push(
+              context,
               MaterialPageRoute(builder: (context) => AdoptanteScreen()),
+            );
+          },
+        ),
+        ButtonWithImage(
+          imagePath: "assets/user.png",
+          label: 'EVENTOS',
+          onPressed: () {
+            Navigator.push(
+              context,
+              MaterialPageRoute(builder: (context) => AdoptionEventsScreen()),
             );
           },
         ),
