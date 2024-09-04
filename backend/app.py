@@ -261,6 +261,47 @@ def getMascotasPorCategoria(categoria):
 
     return jsonify({"data": mascotas_json}), 201
 
+@app.route('/getEventos', methods=['GET'])
+def getEventos():
+    conexion = obtener_conexion()
+    eventos = []
+    with conexion.cursor() as cursor:
+        cursor.execute("SELECT * FROM DiaDeAdopcion")
+        eventos = cursor.fetchall()
+    conexion.close()
+    eventos_json = []
+    for evento in eventos:
+        evento_dict = {
+            'title': evento[1],
+            'fecha': evento[2],
+            'location': evento[3],
+            'descripcion': evento[4],
+            'image': evento[5],
+            'likes': evento[6]
+        }
+        eventos_json.append(evento_dict)
+
+    return jsonify({"data": eventos_json}), 201
+
+@app.route('/darLike', methods=['POST'])
+def darLike():
+    data = request.json
+    conection = obtener_conexion()
+    try:
+        evento_title = data.get('evento_title')
+        with conection.cursor() as cursor:
+            cursor.execute("UPDATE DiaDeAdopcion SET likes = likes + 1 WHERE title = %s", (evento_title,))
+            conection.commit()
+        return jsonify({"msg": "se registro like"}), 201
+
+    except Exception as e:
+        print(e)
+        conection.rollback()
+        return jsonify({"msg": "Failed to put like",
+                        "error": str(e)}), 500
+    finally:
+        conection.close()
+
 
 @app.route('/getMascotasASC', methods=['GET'])
 def getMascotasASC():
