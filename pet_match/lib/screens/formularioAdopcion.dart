@@ -4,6 +4,7 @@ import 'package:pet_match/constants.dart';
 import 'package:pet_match/screens/profile.dart';
 import 'package:pet_match/components/CustomButton.dart';
 import 'package:pet_match/components/CustomInput.dart';
+import 'package:dio/dio.dart';
 
 class FormularioDonanteScreen extends StatefulWidget {
   @override
@@ -33,6 +34,45 @@ class _FormularioDonanteScreen extends State<FormularioDonanteScreen> {
           cartaDeMotivoFileName = result.files.first.name;
         }
       });
+    }
+  }
+
+  Future<void> _actualizarFicha() async {
+    Dio dio = Dio();
+    try {
+      // Aquí configuras los datos que vas a enviar en la solicitud PUT
+      var data = {
+        "codigo": usuario_loggeado!
+            .codigo, // Reemplaza con el código real del usuario
+        "nombre": firstNameController.text,
+        "apellido": lastNameController.text,
+        "ocupacion": occupationController.text,
+        "descripcion": descriptionController.text,
+        "rol": rolDePagoFileName ?? '',
+        "motivacion": cartaDeMotivoFileName ?? '',
+      };
+
+      final response =
+          await dio.put('http://10.0.2.2:5000/actualizarFicha', data: data);
+
+      if (response.statusCode == 201) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(content: Text('Datos actualizados con éxito')),
+        );
+        Navigator.push(
+          context,
+          MaterialPageRoute(builder: (context) => AdoptanteScreen()),
+        );
+      } else {
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(content: Text('Error al actualizar los datos')),
+        );
+      }
+    } catch (e) {
+      print('Error: $e');
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(content: Text('Error al conectar con el servidor')),
+      );
     }
   }
 
@@ -185,14 +225,7 @@ class _FormularioDonanteScreen extends State<FormularioDonanteScreen> {
                   const SizedBox(height: 50),
                   CustomButton(
                     text: "REGISTRAR ADOPTANTE",
-                    onPressed: () {
-                      //deberia hacer update en los datos del usuario pero por ahora solo regresa a el perfil de donante
-                      Navigator.push(
-                        context,
-                        MaterialPageRoute(
-                            builder: (context) => AdoptanteScreen()),
-                      );
-                    },
+                    onPressed: _actualizarFicha,
                     backgroundColor: Colors.grey,
                     textColor: Colors.white,
                     borderRadius: 10.0,

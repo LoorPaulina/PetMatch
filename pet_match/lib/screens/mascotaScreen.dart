@@ -28,8 +28,9 @@ class _MascotaScreenState extends State<MascotaScreen>
   Vacuna vacuna = Vacuna(nombre: '', vacuna: 'vacuna', fecha: DateTime.now());
   List<Vacuna> vacunas = [];
   final _clientId =
-      '98333547243-3n5grd1s11i0c5f66qqmtukcdq4qc3bt.apps.googleusercontent.com';
-  final _redirectUri = 'com.example.petmatch:/oauth2redirect';
+      "98333547243-3n5grd1s11i0c5f66qqmtukcdq4qc3bt.apps.googleusercontent.com";
+  final _redirectUri = 'com.example.pet_match:/oauth2redirect';
+
   void getAnimalSeleccionado() {
     for (int i = 0; i < mascotasFetched.length; i++) {
       if (mascotasFetched[i].nombre == selectedMascota) {
