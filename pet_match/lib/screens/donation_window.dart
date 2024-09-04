@@ -6,12 +6,48 @@ import 'package:pet_match/components/CustomButton.dart';
 import 'package:pet_match/components/CustomInput.dart';
 import 'package:pet_match/screens/main_window.dart';
 import 'package:pet_match/screens/donation_success.dart';
+import 'package:dio/dio.dart';
 
 class DonationScreen extends StatelessWidget {
   final TextEditingController nameController = TextEditingController();
   final TextEditingController cardController = TextEditingController();
   final TextEditingController expirationController = TextEditingController();
   final TextEditingController cvvController = TextEditingController();
+  final TextEditingController montoController = TextEditingController();
+  Future<void> _makeDonation(BuildContext context) async {
+    Dio dio = Dio();
+    // URL de tu endpoint en Flask
+    final String url = "http://10.0.2.2:5000/registrarDonacion";
+    int _codigoUsuario = usuario_loggeado!.codigo;
+    String _montoDonacion = montoController.text;
+    // Datos que se van a enviar
+    final Map<String, dynamic> donationData = {
+      'codigo': _codigoUsuario,
+      'monto': _montoDonacion,
+    };
+
+    try {
+      Response response = await dio.post(
+        url,
+        data: donationData,
+        options: Options(
+          headers: {'Content-Type': 'application/json'},
+        ),
+      );
+
+      if (response.statusCode == 201) {
+        Navigator.of(context).pushReplacement(
+          MaterialPageRoute(builder: (context) => DonationSuccessScreen()),
+        );
+      } else {
+        // Manejar errores
+        print("Error: ${response.statusMessage}");
+      }
+    } catch (e) {
+      // Manejo de excepciones
+      print("Error al realizar la donación: $e");
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -49,14 +85,9 @@ class DonationScreen extends StatelessWidget {
               ),
               const SizedBox(height: 10),
               Center(
-                child: Text(
-                  "\$0.00",
-                  style: TextStyle(
-                    color: secundaryColor,
-                    fontSize: 36,
-                    fontFamily: 'LexendDeca',
-                    fontWeight: FontWeight.bold,
-                  ),
+                child: Custominput(
+                  label: "MONTO",
+                  controller: montoController,
                 ),
               ),
               const SizedBox(height: 30),
@@ -125,12 +156,7 @@ class DonationScreen extends StatelessWidget {
               const SizedBox(height: 30),
               CustomButton(
                 text: "DONAR",
-                onPressed: () {
-                  Navigator.of(context).pushReplacement(
-                    MaterialPageRoute(
-                        builder: (context) => DonationSuccessScreen()),
-                  );
-                },
+                onPressed: () => _makeDonation(context),
                 backgroundColor: Colors.grey,
                 textColor: Colors.white,
                 borderRadius: 10.0,

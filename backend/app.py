@@ -403,7 +403,7 @@ def registrarDonacion():
         id_usuario = data.get('codigo')
         id_usuario = int(id_usuario)
         monto_donacion = data.get('monto')
-        fecha_donacion = datetime.datetime.now().date()
+        fecha_donacion = datetime.now().date()
         fecha_donacion = fecha_donacion.strftime('%Y-%m-%d')
         with conection.cursor() as cursor:
             query = """INSERT INTO Donaciones
