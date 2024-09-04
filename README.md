@@ -37,8 +37,11 @@ pip install -r requirements.txt
 flask run --debug
 ```
 
+Nota: El script de la base de datos se encuentra en el repo como `script.txt`, se lo debe ejecutar en local preferiblemente en MySqlWorkbench 
+
 ## Requisitos del frontend
 - Editor de código (de preferencia Visual Code)
 - Emulador para la app (se usó Android Studio)
 - Dart 3.4.0
 - Flutter 3.22.0
+
