@@ -32,7 +32,7 @@ class MainWindow extends StatelessWidget {
             padding: const EdgeInsets.symmetric(horizontal: 10.0),
             child: Center(
               child: Text(
-                'Paulina Loor',
+                usuario_loggeado!.nombre + " " + usuario_loggeado!.apellido,
                 style: TextStyle(
                   color: textColor,
                   fontSize: 8.0,

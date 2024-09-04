@@ -5,6 +5,12 @@ import 'package:pet_match/constants.dart';
 import 'package:pet_match/models/historialMedico.dart';
 import '../models/mascotas.dart';
 import '../models/vacuna.dart';
+import 'package:flutter_web_auth/flutter_web_auth.dart';
+import 'package:http/http.dart' as http; // Para hacer solicitudes HTTP
+import 'package:googleapis_auth/auth_io.dart'; // Para manejar autenticación con Google APIs
+import 'package:googleapis/calendar/v3.dart'
+    as calendar; // Para usar Google Calendar API
+import 'dart:convert';
 
 class MascotaScreen extends StatefulWidget {
   @override
@@ -21,6 +27,9 @@ class _MascotaScreenState extends State<MascotaScreen>
 
   Vacuna vacuna = Vacuna(nombre: '', vacuna: 'vacuna', fecha: DateTime.now());
   List<Vacuna> vacunas = [];
+  final _clientId =
+      "98333547243-3n5grd1s11i0c5f66qqmtukcdq4qc3bt.apps.googleusercontent.com";
+  final _redirectUri = 'com.example.pet_match:/oauth2redirect';
 
   void getAnimalSeleccionado() {
     for (int i = 0; i < mascotasFetched.length; i++) {
@@ -58,6 +67,61 @@ class _MascotaScreenState extends State<MascotaScreen>
       });
     } catch (e) {
       print(e);
+    }
+  }
+
+  Future<void> _addEventToGoogleCalendar() async {
+    try {
+      final url =
+          'https://accounts.google.com/o/oauth2/auth?client_id=$_clientId&redirect_uri=$_redirectUri&response_type=code&scope=https://www.googleapis.com/auth/calendar.events';
+      final result = await FlutterWebAuth.authenticate(
+        url: url,
+        callbackUrlScheme: 'com.yourapp',
+      );
+
+      final code = Uri.parse(result).queryParameters['code'];
+
+      final tokenUrl = 'https://oauth2.googleapis.com/token';
+      final response = await http.post(
+        Uri.parse(tokenUrl),
+        body: {
+          'client_id': _clientId,
+          'grant_type': 'authorization_code',
+          'redirect_uri': _redirectUri,
+          'code': code,
+        },
+      );
+
+      final tokenData = json.decode(response.body);
+      final accessToken = tokenData['access_token'];
+      final expiry =
+          DateTime.now().add(Duration(seconds: tokenData['expires_in']));
+
+      final credentials = AccessCredentials(
+        AccessToken('Bearer', accessToken, expiry),
+        tokenData['refresh_token'],
+        ['https://www.googleapis.com/auth/calendar.events'],
+      );
+
+      final client = authenticatedClient(http.Client(), credentials);
+      final calendarApi = calendar.CalendarApi(client);
+
+      final event = calendar.Event(
+        summary: "Adopción de ${mascota.nombre}",
+        start: calendar.EventDateTime(dateTime: DateTime.now()),
+        end: calendar.EventDateTime(
+            dateTime: DateTime.now().add(Duration(hours: 1))),
+      );
+
+      await calendarApi.events.insert(event, "primary");
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(content: Text("Evento agregado al Google Calendar")),
+      );
+    } catch (e) {
+      print("Error: $e");
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(content: Text("Error al agregar el evento")),
+      );
     }
   }
 
@@ -180,7 +244,7 @@ class _MascotaScreenState extends State<MascotaScreen>
                       ),
                       padding: const EdgeInsets.symmetric(vertical: 15),
                     ),
-                    onPressed: () {},
+                    onPressed: _addEventToGoogleCalendar,
                     child: const Row(
                       mainAxisAlignment: MainAxisAlignment.center,
                       children: [

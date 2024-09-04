@@ -93,7 +93,8 @@ class AdoptanteScreen extends StatelessWidget {
               children: [
                 _buildInfoCard(
                     'ADOPCIONES', usuario_loggeado!.numAdopciones.toString()),
-                _buildInfoCard('DONACIONES', '\$0.00'),
+                _buildInfoCard('DONACIONES',
+                    '\$${usuario_loggeado!.cantidadDonaciones.toString()}'),
               ],
             ),
             SizedBox(height: 20),
