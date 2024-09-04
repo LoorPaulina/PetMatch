@@ -1,6 +1,10 @@
 # PetMatch
 Este proyecto está diseñado para el manejo de adopciones en una fundación de animales.
 
+## Desarrolladores
+- Ruiz Dafne
+- Loor Paulina
+
 ## Requisitos del backend
 
 - Python 3.12.3
